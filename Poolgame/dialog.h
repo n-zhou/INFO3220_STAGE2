@@ -3,6 +3,10 @@
 #include "ball.h"
 #include "game.h"
 
+//nzho8446 added headers
+#include <QProgressBar>
+
+
 namespace Ui {
 class Dialog;
 }
@@ -20,6 +24,20 @@ protected:
      * @brief paintEvent - called whenever window repainting is requested
      */
     void paintEvent(QPaintEvent *);
+
+    /**
+     * @brief mousePressEvent - called whenever the user clicks their mouse
+     * @param event
+     */
+    void mousePressEvent(QMouseEvent *event);
+
+    /**
+     * @brief mouseReleaseEvent - called whenever the user releases their click
+     * @param event
+     */
+    void mouseReleaseEvent(QMouseEvent *event);
+
+    void mouseMoveEvent(QMouseEvent *event);
 public slots:
     /**
      * @brief nextAnim - move the objects and perform collision events
@@ -47,5 +65,11 @@ private:
      * @brief m_game - our game object to be played
      */
     Game* m_game = nullptr;
+
+
+    int x;
+    int y;
+    bool on = false;
+    QProgressBar *progress_bar = nullptr;
 };
 
