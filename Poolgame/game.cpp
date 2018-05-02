@@ -1,4 +1,4 @@
-#include "game.h"
+   #include "game.h"
 #include "utils.h"
 
 #include <QJsonArray>
@@ -9,7 +9,7 @@
 
 Game::~Game() {
     // cleanup ya boi
-    for (auto b : *m_balls) delete b;
+    //for (auto b : *m_balls) delete b;
     delete m_balls;
     delete m_table;
 }
@@ -18,20 +18,20 @@ void Game::render(QPainter &painter) const {
     // table is rendered first, as its the lowest
     m_table->render(painter);
     // then render all the balls
-    for (Ball* b : *m_balls) b->render(painter);
+    for (std::shared_ptr<Ball> b : *m_balls) b->render(painter);
 }
 
 void Game::animate(double dt) {
     // (test) collide the ball with each other ball exactly once
     // to achieve this, balls only check collisions with balls "after them"
     for (auto it = m_balls->begin(); it != m_balls->end(); ++it) {
-        Ball* ballA = *it;
+        std::shared_ptr<Ball> ballA = *it;
         // correct ball velocity if colliding with table
-        resolveCollision(m_table, ballA);
+        resolveCollision(m_table, ballA.get());
         // check collision with all later balls
         for (auto nestedIt = it + 1; nestedIt != m_balls->end(); ++nestedIt) {
-            Ball* ballB = *nestedIt;
-            resolveCollision(ballA, ballB);
+            std::shared_ptr<Ball> ballB = *nestedIt;
+            resolveCollision(ballA.get(), ballB.get());
         }
 
         // move ball due to speed

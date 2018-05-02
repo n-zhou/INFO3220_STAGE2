@@ -1,7 +1,7 @@
 #include "stageonefactory.h"
 #include <QJsonObject>
 
-Ball* StageOneFactory::makeBall(const QJsonObject& ballData) {
+std::shared_ptr<Ball> StageOneFactory::makeBall(const QJsonObject& ballData) {
     // construct a ball from its values
 
     QString col = ballData.value("colour").toString();
@@ -19,7 +19,7 @@ Ball* StageOneFactory::makeBall(const QJsonObject& ballData) {
     double mass = ballData.value("mass").toDouble();
     double radius = ballData.value("radius").toDouble();
 
-    return new StageOneBall(QColor(col), QVector2D(xpos, ypos), QVector2D(xvel, yvel), mass, radius);
+    return std::shared_ptr<Ball>(new StageOneBall(QColor(col), QVector2D(xpos, ypos), QVector2D(xvel, yvel), mass, radius));
 }
 Table* StageOneFactory::makeTable(const QJsonObject& tableData) {
     // create a stage one table based on the fed in json data

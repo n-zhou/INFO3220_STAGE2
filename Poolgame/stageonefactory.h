@@ -8,7 +8,7 @@ public:
      * @param ballData - our json data for this table
      * @return
      */
-    virtual Ball* makeBall(const QJsonObject& ballData) override;
+    virtual std::shared_ptr<Ball> makeBall(const QJsonObject& ballData) override;
 
     /**
      * @brief makeTable - construct a table based on json

@@ -50,11 +50,13 @@ public:
     StageOneBall(QColor colour, QVector2D position,
                  QVector2D velocity, double mass, int radius) :
         Ball(colour, position, velocity, mass, radius) {}
+
     /**
      * @brief render - draw the ball to the screen
      * @param painter - QPainter that is owned by the dialog
      */
     void render(QPainter &painter) override;
+
     /**
      * @brief translate - Move the ball's position by provided vector
      * @param vec - vector

@@ -1,0 +1,20 @@
+{
+    "table" : {
+        "colour":"green",
+        "size":{
+            "x":1000,
+            "y":500
+        },
+        "friction":0.1
+    },
+    "balls" : [
+        {"colour":"white","position":{"x":50,"y":50},"velocity":{"x":1000,"y":50},"mass":2,"radius":10},
+        {"colour":"red","position":{"x":150,"y":60},"velocity":{"x":-200,"y":20},"mass":2,"radius":10},
+        {"colour":"blue","position":{"x":550,"y":320},"velocity":{"x":-150,"y":80},"mass":2,"radius":10},
+        {"colour":"#123456","position":{"x":450,"y":70},"velocity":{"x":-100,"y":230},"mass":15,"radius":20},
+        {"colour":"#123456","position":{"x":350,"y":70},"velocity":{"x":-100,"y":10},"mass":15,"radius":20},
+        {"colour":"#123456","position":{"x":550,"y":70},"velocity":{"x":-100,"y":330},"mass":15,"radius":20},
+        {"colour":"#123456","position":{"x":750,"y":70},"velocity":{"x":-100,"y":-200},"mass":15,"radius":20},
+        {"colour":"yellow","position":{"x":450,"y":200},"velocity":{"x":100,"y":-80},"mass":3,"radius":10}
+    ]
+}

@@ -10,7 +10,7 @@ public:
     GameBuilder(AbstractStageFactory* factory) : m_factory(factory) {}
     /**
      * @brief addBall creates a ball to the current game being buil
-     * @param ballData - json object that is simply an element of the array of balls provided in the config
+     * @param ballData - json object that is simply an element of the array of balls provided in the
      */
     virtual void addBall(QJsonObject& ballData) = 0;
 
@@ -28,7 +28,7 @@ public:
 };
 
 class StageOneBuilder : public GameBuilder {
-    std::vector<Ball*>* m_buildingBalls = nullptr;
+    std::vector<std::shared_ptr<Ball>>* m_buildingBalls = nullptr;
     Table* m_buildingTable = nullptr;
 public:
     ~StageOneBuilder();
@@ -36,7 +36,7 @@ public:
 
     /**
      * @brief addBall creates a ball to the current game being buil
-     * @param ballData - json object that is simply an element of the array of balls provided in the config
+     * @param ballData - json object that is simply an element of the array of balls provided in the
      */
     void addBall(QJsonObject &ballData) override;
 

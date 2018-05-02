@@ -4,11 +4,11 @@
 #include "abstractstagefactory.h"
 
 class Game {
-    std::vector<Ball*>* m_balls;
+    std::vector<std::shared_ptr<Ball>>* m_balls;
     Table* m_table;
 public:
     ~Game();
-    Game(std::vector<Ball*>* balls, Table* table) :
+    Game(std::vector<std::shared_ptr<Ball>>* balls, Table* table) :
         m_balls(balls), m_table(table) {}
     /**
      * @brief Draws all owned objects to the screen (balls and table)
