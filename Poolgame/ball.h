@@ -54,7 +54,7 @@ public:
     /**
      * @brief render - draw the ball to the screen
      * @param painter - QPainter that is owned by the dialog
-     */
+    2 */
     void render(QPainter &painter) override;
 
     /**
