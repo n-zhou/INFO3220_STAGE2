@@ -11,6 +11,7 @@ protected:
     int m_ypos;
     QBrush m_brush;
     double m_friction;
+
 public:
     virtual ~Table() {}
     Table(int width, int height, QColor colour, double friction, int xpos, int ypos) :

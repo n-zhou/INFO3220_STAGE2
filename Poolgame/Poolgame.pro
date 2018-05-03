@@ -30,7 +30,10 @@ SOURCES += \
     ball.cpp \
     table.cpp \
     game.cpp \
-    gamebuilder.cpp
+    gamebuilder.cpp \
+    stagetwofactory.cpp \
+    stagetwoball.cpp \
+    pocket.cpp
 
 HEADERS += \
         dialog.h \
@@ -40,7 +43,10 @@ HEADERS += \
     table.h \
     game.h \
     gamebuilder.h \
-    utils.h
+    utils.h \
+    stagetwofactory.h \
+    stagetwoball.h \
+    pocket.h
 
 FORMS += \
         dialog.ui

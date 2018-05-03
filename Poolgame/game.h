@@ -7,9 +7,9 @@ class Game {
     std::vector<std::shared_ptr<Ball>>* m_balls;
     Table* m_table;
 public:
-    ~Game();
+    virtual ~Game();
     Game(std::vector<std::shared_ptr<Ball>>* balls, Table* table) :
-        m_balls(balls), m_table(table) {}
+        m_balls(balls), m_table(table){}
     /**
      * @brief Draws all owned objects to the screen (balls and table)
      * @param painter - qtpainter to blit to screen with
@@ -31,11 +31,12 @@ public:
      * @param table - the table to be bounds checked
      * @param ball - the ball to move
      */
-    void resolveCollision(const Table* table, Ball* ball);
+    virtual void resolveCollision(const Table* table, Ball* ball);
+
     /**
      * @brief resolveCollision - resolve both ball's velocity whether these balls collide
      * @param ballA - first ball
      * @param ballB - second ball
      */
-    void resolveCollision(Ball* ballA, Ball* ballB);
+     virtual void resolveCollision(Ball* ballA, Ball* ballB);
 };
