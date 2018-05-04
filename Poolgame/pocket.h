@@ -1,5 +1,4 @@
-#ifndef POCKET_H
-#define POCKET_H
+#pragma once
 
 #include <QVector2D>
 #include <QPainter>
@@ -20,5 +19,3 @@ protected:
     QVector2D m_pos;
     double m_radius;
 };
-
-#endif // POCKET_H

@@ -18,7 +18,7 @@ void StageOneBuilder::addBall(QJsonObject &ballData) {
     if (m_buildingBalls == nullptr) {
         m_buildingBalls = new std::vector<std::shared_ptr<Ball>>();
     }
-    m_buildingBalls->push_back(m_factory->makeBall(ballData));
+    m_buildingBalls->push_back(std::move(m_factory->makeBall(ballData)));
 }
 
 void StageOneBuilder::addTable(QJsonObject &tableData) {

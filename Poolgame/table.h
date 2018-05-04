@@ -2,6 +2,7 @@
 
 #include <QColor>
 #include <QPainter>
+#include "pocket.h"
 
 class Table {
 protected:
@@ -11,6 +12,7 @@ protected:
     int m_ypos;
     QBrush m_brush;
     double m_friction;
+
 
 public:
     virtual ~Table() {}

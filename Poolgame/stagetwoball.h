@@ -1,5 +1,4 @@
-#ifndef STAGETWOBALL_H
-#define STAGETWOBALL_H
+#pragma once
 
 #include "ball.h"
 #include <vector>
@@ -11,8 +10,13 @@ class StageTwoBall : public Ball
 {
 public:
     StageTwoBall(QColor colour, QVector2D position,
-                 QVector2D velocity, double mass, int radius) :
-        Ball(colour, position, velocity, mass, radius) {}
+                 QVector2D velocity, double mass, int radius, double strength) :
+        Ball(colour, position, velocity, mass, radius), m_strength(strength) {}
+
+    ~StageTwoBall()
+    {
+
+    }
 
     /**
      * @brief render - draw the ball to the screen
@@ -35,6 +39,6 @@ public:
 
 private:
     std::vector<std::shared_ptr<Ball>> m_balls;
+    double m_strength;
 };
 
-#endif // STAGETWOBALL_H
