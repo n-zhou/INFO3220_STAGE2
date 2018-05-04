@@ -14,7 +14,7 @@ protected:
 
 public:
     virtual ~Table() {}
-    Table(int width, int height, QColor colour, double friction, int xpos, int ypos) :
+    Table(int width, int height, QColor colour, double friction, int xpos = 0, int ypos = 0) :
         m_width(width), m_height(height), m_xpos(xpos), m_ypos(ypos),
         m_brush(colour), m_friction(friction) {}
     /**

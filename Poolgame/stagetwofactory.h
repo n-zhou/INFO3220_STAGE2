@@ -1,6 +1,10 @@
 #pragma once
 
+#include <iostream>
+#include <QJsonObject>
 #include "abstractstagefactory.h"
+#include "utils.h"
+#include "pocket.h"
 
 class StageTwoFactory : public AbstractStageFactory
 {

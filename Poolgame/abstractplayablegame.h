@@ -6,9 +6,13 @@
 class AbstractPlayableGame
 {
 public:
-    AbstractPlayableGame(Game *game){}
+    AbstractPlayableGame(Game *game)
+        : m_game(game){}
 
-    virtual AbstractPlayableGame(){}
+    virtual ~AbstractPlayableGame()
+    {
+        delete game;
+    }
 
     /**
      * @brief rightClick - this method should be called whenever
@@ -55,8 +59,21 @@ public:
      * @brief render - Draws the game onto the screen
      * @param painter - QPainter used to draw the objects with
      */
-    virtual void render(QPainter &painter) = 0;
+    virtual void render(QPainter &painter)
+    {
+        m_game->render(painter);
+    }
+
+    /**
+     * @brief animate
+     * @param dt
+     */
+    virtual void animate(double dt)
+    {
+        m_game->animate(dt);
+    }
 
 protected:
+    Game *m_game;
 
 };

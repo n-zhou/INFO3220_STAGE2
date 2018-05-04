@@ -1,6 +1,7 @@
 #include "stageonefactory.h"
 #include <QJsonObject>
 
+
 std::shared_ptr<Ball> StageOneFactory::makeBall(const QJsonObject& ballData) {
     // construct a ball from its values
 

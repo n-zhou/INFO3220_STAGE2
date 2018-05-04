@@ -10,11 +10,13 @@ public:
     virtual ~Game();
     Game(std::vector<std::shared_ptr<Ball>>* balls, Table* table) :
         m_balls(balls), m_table(table){}
+
     /**
      * @brief Draws all owned objects to the screen (balls and table)
      * @param painter - qtpainter to blit to screen with
      */
     void render(QPainter& painter) const;
+
     /**
      * @brief Updates the positions of all objects within, based on how much time has changed
      * @param dt - time elapsed since last frame in seconds

@@ -46,7 +46,8 @@ HEADERS += \
     utils.h \
     stagetwofactory.h \
     stagetwoball.h \
-    pocket.h
+    pocket.h \
+    abstractplayablegame.h
 
 FORMS += \
         dialog.ui
