@@ -9,12 +9,12 @@ class Pocket
 public:
     Pocket(QVector2D pos, double radius);
 
-    ~Pocket();
+    virtual ~Pocket();
 
     virtual void render(QPainter& painter);
 
-    QVector2D getPos();
-    double getRadius();
+    virtual QVector2D getPos();
+    virtual double getRadius();
 
 protected:
     QVector2D m_pos;
