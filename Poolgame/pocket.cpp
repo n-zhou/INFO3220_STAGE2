@@ -6,6 +6,11 @@ Pocket::Pocket(QVector2D pos, double radius)
 
 }
 
+Pocket::~Pocket()
+{
+
+}
+
 void Pocket::render(QPainter& painter)
 {
     // use our colour
