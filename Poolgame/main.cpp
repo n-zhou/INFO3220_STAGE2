@@ -7,6 +7,7 @@
 #include "game.h"
 #include "utils.h"
 #include "gamebuilder.h"
+#include "ball.h"
 #include <QApplication>
 #include <QFile>
 #include <QString>
@@ -23,6 +24,8 @@ QJsonObject loadConfig() {
     return config;
 }
 
+bool Ball::toggle = false;
+
 int main(int argc, char *argv[])
 {
     QJsonObject conf = loadConfig();
@@ -31,7 +34,7 @@ int main(int argc, char *argv[])
     GameDirector director(&conf);
     // set and transfer ownership of this builder to the director
     director.setBuilder(new StageOneBuilder());
-    Game* game = director.createGame();
+    AbstractPlayableGame* game = director.createGame();
 
     // display our dialog that contains our game and run
     QApplication a(argc, argv);

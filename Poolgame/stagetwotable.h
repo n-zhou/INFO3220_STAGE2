@@ -1,5 +1,4 @@
-#ifndef STAGETWOTABLE_H
-#define STAGETWOTABLE_H
+#pragma once
 
 #include "table.h"
 
@@ -12,5 +11,3 @@ public:
 
     void render(QPainter& painter);
 };
-
-#endif // STAGETWOTABLE_H

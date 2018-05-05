@@ -34,7 +34,9 @@ SOURCES += \
     stagetwofactory.cpp \
     stagetwoball.cpp \
     pocket.cpp \
-    stagetwotable.cpp
+    stagetwotable.cpp \
+    stageoneadaptor.cpp \
+    stagetwoplayablegame.cpp
 
 HEADERS += \
         dialog.h \
@@ -49,7 +51,9 @@ HEADERS += \
     stagetwoball.h \
     pocket.h \
     abstractplayablegame.h \
-    stagetwotable.h
+    stagetwotable.h \
+    stageoneadaptor.h \
+    stagetwoplayablegame.h
 
 FORMS += \
         dialog.ui

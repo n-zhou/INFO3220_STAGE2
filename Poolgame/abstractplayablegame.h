@@ -84,5 +84,9 @@ public:
      */
     virtual void animate(double dt) = 0;
 
+    virtual int getMinimumHeight() const = 0;
+
+    virtual int getMinimumWidth() const = 0;
+
 
 };

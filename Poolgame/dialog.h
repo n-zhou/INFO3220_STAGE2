@@ -1,10 +1,10 @@
 #pragma once
 #include <QDialog>
+#include "abstractplayablegame.h"
 #include "ball.h"
 #include "game.h"
 
 //nzho8446 added headers
-#include <QProgressBar>
 
 
 namespace Ui {
@@ -16,7 +16,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(Game* game, QWidget *parent = 0);
+    explicit Dialog(AbstractPlayableGame* game, QWidget *parent = 0);
     ~Dialog();
 
 protected:
@@ -37,6 +37,10 @@ protected:
      */
     void mouseReleaseEvent(QMouseEvent *event);
 
+    /**
+     * @brief mouseReleaseEvent - called whenever the user moves the mouse
+     * @param event
+     */
     void mouseMoveEvent(QMouseEvent *event);
 public slots:
     /**
@@ -64,12 +68,7 @@ private:
     /**
      * @brief m_game - our game object to be played
      */
-    Game* m_game = nullptr;
+    AbstractPlayableGame* m_game = nullptr;
 
-
-    int x;
-    int y;
-    bool on = false;
-    QProgressBar *progress_bar = nullptr;
 };
 

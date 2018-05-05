@@ -12,6 +12,9 @@ protected:
     double m_mass;
     int m_radius;
 public:
+
+    static bool toggle;
+
     virtual ~Ball() {}
     Ball(QColor colour, QVector2D position,
          QVector2D velocity, double mass, int radius) :

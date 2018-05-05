@@ -1,4 +1,6 @@
 
+#include "abstractplayablegame.h"
+#include "stageoneadaptor.h"
 #include "gamebuilder.h"
 #include "game.h"
 #include <iostream>
@@ -27,7 +29,7 @@ void StageOneBuilder::addTable(QJsonObject &tableData) {
     m_buildingTable = m_factory->makeTable(tableData);
 }
 
-Game* StageOneBuilder::getResult() {
+AbstractPlayableGame* StageOneBuilder::getResult() {
     // no-one called addBall
     if (m_buildingBalls == nullptr) {
         // soft fail
@@ -43,11 +45,10 @@ Game* StageOneBuilder::getResult() {
     // need to reset for when we build next
     m_buildingBalls = nullptr;
     m_buildingTable = nullptr;
-
-    return retGame;
+    return new StageOneAdaptor(retGame);
 }
 
-Game* GameDirector::createGame() {
+AbstractPlayableGame* GameDirector::createGame() {
     // construct our table
     QJsonObject tableData = m_conf->value("table").toObject();
     m_builder->addTable(tableData);
