@@ -62,7 +62,8 @@ FORMS += \
 
 DISTFILES += \
     config.json \
-    config.json
+    config.json \
+    config1.json
 
 copyconfig.depends = ../Poolgame/config.json
 copyconfig.commands = \

@@ -3,11 +3,12 @@
 #include <iostream>
 #include "gamebuilder.h"
 #include "stagetwoplayablegame.h"
+#include "stagetwofactory.h"
 
 class StageTwoBuilder : public StageOneBuilder
 {
 public:
-    StageTwoBuilder() : StageOneBuilder(new StageOneFactory()) {}
+    StageTwoBuilder() : StageOneBuilder(new StageTwoFactory()) {}
 
     /**
      * @brief getResult - retrieve the building
