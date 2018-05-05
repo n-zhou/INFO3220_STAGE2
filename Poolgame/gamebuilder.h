@@ -29,11 +29,19 @@ public:
 };
 
 class StageOneBuilder : public GameBuilder {
+protected:
     std::vector<std::shared_ptr<Ball>>* m_buildingBalls = nullptr;
     Table* m_buildingTable = nullptr;
 public:
-    ~StageOneBuilder();
+    virtual ~StageOneBuilder();
     StageOneBuilder() : GameBuilder(new StageOneFactory()) {}
+
+    /**
+     * @brief StageOneBuilder - constructor takes in one argument and
+     * makes the builder use a certain factory.
+     * @param factory - the factory which we want the game builder to use.
+     */
+    StageOneBuilder(AbstractStageFactory *factory) : GameBuilder(factory) {}
 
     /**
      * @brief addBall creates a ball to the current game being buil
@@ -51,7 +59,7 @@ public:
      * @brief getResult - retrieve the building
      * @return
      */
-    AbstractPlayableGame* getResult() override;
+    virtual AbstractPlayableGame* getResult() override;
 };
 
 class GameDirector {

@@ -40,17 +40,25 @@ Dialog::Dialog(AbstractPlayableGame *game, QWidget* parent) :
 
 void Dialog::mousePressEvent(QMouseEvent *event)
 {
-
+    if (event->button() == Qt::LeftButton) {
+        m_game->leftClick(event);
+    } else if (event->button() == Qt::RightButton) {
+        m_game->rightClick(event);
+    }
 }
 
 void Dialog::mouseReleaseEvent(QMouseEvent *event)
 {
-
+    if (event->button() == Qt::LeftButton) {
+        m_game->leftClickRelease(event);
+    } else if (event->button() == Qt::RightButton) {
+        m_game->rightClickRelease(event);
+    }
 }
 
 void Dialog::mouseMoveEvent(QMouseEvent *event)
 {
-
+    m_game->mouseDrag(event);
 }
 
 Dialog::~Dialog()

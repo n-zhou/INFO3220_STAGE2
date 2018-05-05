@@ -3,6 +3,10 @@
 void StageTwoBall::translate(QVector2D vec) {
     m_pos += vec;
 
+    for (auto b : m_balls) {
+        b.get()->translate(vec);
+    }
+
 }
 
 void StageTwoBall::render(QPainter &painter) {
@@ -11,9 +15,11 @@ void StageTwoBall::render(QPainter &painter) {
     // circle centered
     painter.drawEllipse(m_pos.toPointF(), m_radius, m_radius);
 
-    //draw the inner balls on top
-    for (auto b : m_balls) {
-        b.get()->render(painter);
+    //draw the inner balls on top only if the user toggles it
+    if (Ball::toggle) {
+        for (auto b : m_balls) {
+            b.get()->render(painter);
+        }
     }
 }
 

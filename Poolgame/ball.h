@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QColor>
 #include <QPoint>
 #include <QPainter>
 #include <QVector2D>
@@ -46,6 +47,7 @@ public:
     double getMass() const { return m_mass; }
     double getRadius() const { return m_radius; }
     QVector2D getPosition() const { return m_pos; }
+    QColor getColour() const { return m_brush.color(); }
 };
 
 class StageOneBall : public Ball {

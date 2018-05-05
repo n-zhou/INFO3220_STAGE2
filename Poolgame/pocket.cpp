@@ -13,9 +13,9 @@ Pocket::~Pocket()
 
 void Pocket::render(QPainter& painter)
 {
-    // use our colour
+    // set color to black
     painter.setBrush(QBrush(QColor("black")));
-    // circle centered
+    // pocket centered
     painter.drawEllipse(m_pos.toPointF(), m_radius, m_radius);
 }
 

@@ -2,9 +2,12 @@
 
 #include <iostream>
 #include <QJsonObject>
+#include <QVector2D>
 #include "abstractstagefactory.h"
 #include "utils.h"
 #include "pocket.h"
+#include "stagetwotable.h"
+#include "stagetwoball.h"
 
 class StageTwoFactory : public AbstractStageFactory
 {
