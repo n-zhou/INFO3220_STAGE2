@@ -2,17 +2,14 @@
 
 #include <QMouseEvent>
 #include <QPainter>
+#include <QKeyEvent>
 
 class AbstractPlayableGame
 {
 public:
-    AbstractPlayableGame(Game *game)
-        : m_game(game){}
+    AbstractPlayableGame() {}
 
-    virtual ~AbstractPlayableGame()
-    {
-        delete game;
-    }
+    virtual ~AbstractPlayableGame() {}
 
     /**
      * @brief rightClick - this method should be called whenever
@@ -28,7 +25,7 @@ public:
      * @brief rightClickRelease - this method is called whenever the rightclick
      * is released. The default behaviour of this class is to ignore it. As such
      * subclasses would override this defualt behaviour.
-     * @param e - The QMouseEvent associated with releasing the rightclick
+     * @param e - The QMouseEvent associated with releasing the right click
      */
     virtual void rightClickRelease(QMouseEvent &e) {}
 
@@ -37,16 +34,19 @@ public:
      * a there is a leftclick mouse event. The Default behaviour
      * of this method is to ignore it so it is recommended that subclasses
      * override this behaviour.
+     *
+     * @param e - The QMouseEvent associated with releasing the left click
      */
     virtual void leftClick(QMouseEvent &e) {}
 
     /**
      * @brief leftClickRelease - this method is called whenever the
      * left mouse button is released.
+     *
      * @param e - The QMouseEvent associated with the releasing the
      * leftclick.
      */
-    virtual void leftClickRelease(QMouseEvent &e);
+    virtual void leftClickRelease(QMouseEvent &e) {}
 
     /**
      * @brief mouseDrag - this method is called whenever the user drags their
@@ -56,24 +56,33 @@ public:
     virtual void mouseDrag(QMouseEvent &e) {}
 
     /**
+     * @brief keyPressEvent - called whenever the user hits a key on their
+     * keyboard
+     *
+     * @param event - the QKeyEvent associated with the keypress
+     */
+    virtual void keyPressEvent(QKeyEvent &event) {}
+
+    /**
+     * @brief keyReleaseEvent - called whenever the user releases
+     * a keypress.
+     *
+     * @param event - the QKeyEvent associated with the key release
+     */
+    virtual void keyReleaseEvent(QKeyEvent &event) {}
+
+
+    /**
      * @brief render - Draws the game onto the screen
      * @param painter - QPainter used to draw the objects with
      */
-    virtual void render(QPainter &painter)
-    {
-        m_game->render(painter);
-    }
+    virtual void render(QPainter &painter) = 0;
 
     /**
      * @brief animate
      * @param dt
      */
-    virtual void animate(double dt)
-    {
-        m_game->animate(dt);
-    }
+    virtual void animate(double dt) = 0;
 
-protected:
-    Game *m_game;
 
 };
