@@ -6,12 +6,13 @@
 #include "table.h"
 #include "game.h"
 #include <cmath>
+#include <iostream>
 
 class StageTwoPlayableGame : public AbstractPlayableGame
 {
 public:
     StageTwoPlayableGame(Table *table, std::vector<std::shared_ptr<Ball>> *balls)
-        : AbstractPlayableGame(), m_table(table), m_balls(balls)
+        : AbstractPlayableGame(), m_table(table), m_balls(balls), m_clicked(false)
     {
         for (auto b : *m_balls) {
             if (b.get()->getColour() == QColor("white")) {
@@ -35,6 +36,8 @@ public:
 
     void leftClickRelease(QMouseEvent *e);
 
+    void mouseDrag(QMouseEvent *e);
+
     /**
      * @brief render - Draws the game onto the screen
      * @param painter - QPainter used to draw the objects with
@@ -55,11 +58,19 @@ public:
 private:
     Table *m_table;
     std::vector<std::shared_ptr<Ball>> *m_balls;
+    bool m_clicked;
     Ball *whiteBall;
+    QVector2D mousePos;
 
     void resolveCollision(Table *, Ball *);
 
-    void resolveCollision(Ball&, Ball&);
+    void resolveCollision(Ball*, Ball*);
+
+    /**
+     * @brief hitTheWhiteBall - applies the change in velocity
+     * to the white ball that is a result of getting hit by the cue.
+     */
+    void hitTheWhiteBall();
 };
 
 
