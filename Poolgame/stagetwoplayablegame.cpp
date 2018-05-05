@@ -21,12 +21,18 @@ void StageTwoPlayableGame::leftClick(QMouseEvent *e)
         std::cout << "You can only hit the cue when it's not moving!" << std::endl;
         return;
     }
-    m_clicked = true;
+    mousePos.setX(e->x());
+    mousePos.setY(e->y());
+    if (whiteBall->getPosition().distanceToPoint(mousePos) <= whiteBall->getRadius()) {
+        m_clicked = true;
+    }
 }
 
 void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e)
 {
     if (m_clicked) {
+        mousePos.setX(e->x());
+        mousePos.setY(e->y());
         hitTheWhiteBall();
         m_clicked = false;
     }
@@ -50,10 +56,12 @@ void StageTwoPlayableGame::render(QPainter &painter)
     //draws the line while the left mouse button is clicked
     if (m_clicked) {
         //thickness of the line is set to illustrate power of shot
+        painter.save();
         double distance = whiteBall->getPosition().distanceToPoint(mousePos);
         int thickness = std::fmin(distance/60, 10);
         painter.setPen(QPen(Qt::black, thickness, Qt::DotLine, Qt::RoundCap));
         painter.drawLine(whiteBall->getPosition().toPointF(), mousePos.toPointF());
+        painter.restore();
     }
 }
 
@@ -109,7 +117,7 @@ void StageTwoPlayableGame::hitTheWhiteBall()
     float massA = whiteBall->getMass();
     //and ball B is actually the cue lol
     QVector2D posB = mousePos;
-    QVector2D velB = (posA - mousePos) / 10;
+    QVector2D velB = (posA - posB) / 10;
     float massB = 10;
 
     //calculate their mass ratio
