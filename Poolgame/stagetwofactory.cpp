@@ -9,15 +9,81 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
     double yvel = Default::Ball::yVelocity;
     double mass = Default::Ball::mass;
     double radius = Default::Ball::radius;
+    double strength = Default::Ball::strength;
 
     //check for ball colour
     if (ballData.contains("colour")) {
-
+        colour = ballData["colour"].toString().toStdString();
     } else {
-        std::cerr << << std::endl;
+        std::cerr << "missing ball colour" << std::endl;
     }
 
-    new StageOneBall(QColor(colour.c_str()), QVector2D(xpos, ypos), QVector2D(xvel, yvel), mass, radius);
+    //check for ball mass
+    if (ballData.contains("mass")) {
+        mass = ballData["mass"].toDouble();
+    } else {
+        std::cerr << "missing ball mass" << std::endl;
+    }
+
+    //check for ball strength
+    if (ballData.contains("strength")) {
+        strength = ballData["strength"].toDouble();
+    } else {
+        std::cerr << "missing ball strength" << std::endl;
+    }
+
+    //check for ball radius
+    if (ballData.contains("radius")) {
+        radius = ballData["radius"].toDouble();
+    } else {
+        std::cerr << "ball radius missing" << std::endl;
+    }
+
+    //check the ball position
+    if (ballData.contains("position")) {
+        QJsonObject ballPosition = ballData["position"].toObject();
+
+        //check the ball's x position
+        if (ballPosition.contains("x")) {
+            xpos = ballPosition["x"].toDouble();
+        } else {
+            std::cerr << "missing ball x position" << std::endl;
+        }
+
+        //check the ball's y position
+        if (ballPosition.contains("y")) {
+            ypos = ballPosition["y"].toDouble();
+        } else {
+            std::cerr << "missing ball y position" << std::endl;
+        }
+    } else {
+        std::cerr << "missing both ball position" << std::endl;
+    }
+
+    if (ballData.contains("velocity")) {
+        QJsonObject ballVelocity = ballData["velocity"].toObject();
+
+        //check the ball's x position
+        if (ballVelocity.contains("x")) {
+            xvel = ballVelocity["x"].toDouble();
+        } else {
+            std::cerr << "missing ball x velocity" << std::endl;
+        }
+
+        //check the ball's y position
+        if (ballVelocity.contains("y")) {
+            yvel = ballVelocity["y"].toDouble();
+        } else {
+            std::cerr << "missing ball y velocity" << std::endl;
+        }
+    } else {
+        std::cerr << "ball velocity not provided" << std::endl;
+    }
+
+    StageTwoBall *ret = new StageTwoBall(QColor(colour.c_str()), QVector2D(xpos, ypos), QVector2D(xvel, yvel), mass, radius, strength);
+    QJsonArray ballArray = ballData["balls"].toArray();
+    ret->addBalls(ballArray);
+    return std::shared_ptr<Ball>(ret);
 }
 
 Table* StageTwoFactory::makeTable(const QJsonObject &tableData)
@@ -88,6 +154,8 @@ Table* StageTwoFactory::makeTable(const QJsonObject &tableData)
             double radius = Default::Table::Pocket::radius;
             if (pocket.contains("radius")) {
                 radius = pocket["radius"].toDouble();
+            } else {
+                std::cerr << "missing pocket radius" << std::endl;
             }
 
 

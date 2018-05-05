@@ -1,10 +1,12 @@
 #pragma once
 
 #include "ball.h"
+#include "utils.h"
 #include <vector>
 #include <memory>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <iostream>
 
 class StageTwoBall : public Ball
 {
@@ -35,7 +37,7 @@ public:
      * method is used to add innerballs.
      * @param ballData
      */
-    void addBalls(QJsonObject &ballData);
+    void addBalls(QJsonArray &ballArray);
 
 private:
     std::vector<std::shared_ptr<Ball>> m_balls;

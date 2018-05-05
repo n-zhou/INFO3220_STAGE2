@@ -29,9 +29,6 @@ Dialog::Dialog(AbstractPlayableGame *game, QWidget* parent) :
 
     // set the window size to be at least the table size
     this->resize(game->getMinimumWidth(), game->getMinimumHeight());
-
-
-    this->resize(game->getMinimumWidth(), game->getMinimumHeight() + 20);
     this->setMouseTracking(true);
 
 

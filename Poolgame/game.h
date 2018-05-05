@@ -33,12 +33,12 @@ public:
      * @param table - the table to be bounds checked
      * @param ball - the ball to move
      */
-    virtual void resolveCollision(const Table* table, Ball* ball);
+    static void resolveCollision(const Table* table, Ball* ball);
 
     /**
      * @brief resolveCollision - resolve both ball's velocity whether these balls collide
      * @param ballA - first ball
      * @param ballB - second ball
      */
-     virtual void resolveCollision(Ball* ballA, Ball* ballB);
+     static void resolveCollision(Ball* ballA, Ball* ballB);
 };

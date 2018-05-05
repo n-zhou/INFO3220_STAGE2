@@ -4,6 +4,8 @@
 #include "abstractplayablegame.h"
 #include "ball.h"
 #include "table.h"
+#include "game.h"
+#include <cmath>
 
 class StageTwoPlayableGame : public AbstractPlayableGame
 {
@@ -54,6 +56,10 @@ private:
     Table *m_table;
     std::vector<std::shared_ptr<Ball>> *m_balls;
     Ball *whiteBall;
+
+    void resolveCollision(Table *, Ball *);
+
+    void resolveCollision(Ball&, Ball&);
 };
 
 
