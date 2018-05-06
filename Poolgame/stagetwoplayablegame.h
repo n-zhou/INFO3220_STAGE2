@@ -7,6 +7,7 @@
 #include "game.h"
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 class StageTwoPlayableGame : public AbstractPlayableGame
 {
@@ -16,7 +17,7 @@ public:
     {
         for (auto b : *m_balls) {
             if (b.get()->getColour() == QColor("white")) {
-                whiteBall = b.get();
+                whiteBall = b;
                 break;
             }
         }
@@ -38,6 +39,10 @@ public:
 
     void mouseDrag(QMouseEvent *e);
 
+    void keyPressEvent(QKeyEvent *event) {
+        std::cout << whiteBall.use_count() << std::endl;
+    }
+
     /**
      * @brief render - Draws the game onto the screen
      * @param painter - QPainter used to draw the objects with
@@ -54,17 +59,19 @@ public:
 
     int getMinimumWidth() const;
 
+    bool inPocket(std::shared_ptr<Ball> const& b);
 
 private:
     Table *m_table;
     std::vector<std::shared_ptr<Ball>> *m_balls;
     bool m_clicked;
-    Ball *whiteBall;
+    std::weak_ptr<Ball> whiteBall;
     QVector2D mousePos;
+
 
     void resolveCollision(Table *, Ball *);
 
-    void resolveCollision(Ball*, Ball*);
+    void resolveCollision(Ball*ballA, Ball*ballB);
 
     /**
      * @brief hitTheWhiteBall - applies the change in velocity

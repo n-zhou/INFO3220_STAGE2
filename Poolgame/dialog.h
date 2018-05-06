@@ -42,6 +42,8 @@ protected:
      * @param event
      */
     void mouseMoveEvent(QMouseEvent *event);
+
+    void keyPressEvent(QKeyEvent *event);
 public slots:
     /**
      * @brief nextAnim - move the objects and perform collision events

@@ -58,6 +58,11 @@ void Dialog::mouseMoveEvent(QMouseEvent *event)
     m_game->mouseDrag(event);
 }
 
+void Dialog::keyPressEvent(QKeyEvent *event)
+{
+    m_game->keyPressEvent(event);
+}
+
 Dialog::~Dialog()
 {
     delete aTimer;
