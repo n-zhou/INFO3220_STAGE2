@@ -20,17 +20,17 @@
  {"colour":"red","position":{"x":150,"y":60},"mass":1,"radius":10},
  {"colour":"blue","position":{"x":150,"y":40},"velocity":{"x":-100,"y":0},"radius":10},
  {"colour":"#123456","position":{"x":250,"y":70},"mass":1,"radius":20,"strength":1e5,
-     "balls":[
-     {"colour":"red","position":{"x":-10,"y":0},"mass":1,"radius":10},
-     {"colour":"red","position":{"x":10,"y":0}},
-     {"colour":"red","position":{"x":0,"y":-10}},
-     {"position":{"x":0,"y":10}, "mass":2,"strength":1e4,
-         "balls":[
-         {"colour":"blue","strength":1e3,
-             "balls":[
-             {"colour":"red", "strength":1e4}
-             ]
-         }]
-     }]
+ "balls":[
+ {"colour":"red","position":{"x":-10,"y":0},"mass":1,"radius":10},
+ {"colour":"red","position":{"x":10,"y":0}},
+ {"colour":"red","position":{"x":0,"y":-10}},
+ {"position":{"x":0,"y":10}, "mass":2,"strength":1e4,
+ "balls":[
+ {"colour":"blue","strength":1e3,
+ "balls":[
+ {"colour":"red", "strength":1e4}
+ ]
+ }]
+ }]
  }]
 }

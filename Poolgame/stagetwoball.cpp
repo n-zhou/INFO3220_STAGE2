@@ -71,6 +71,7 @@ void StageTwoBall::addBalls(QJsonArray &ballArray)
             //check the ball's x position
             if (ballPosition.contains("x")) {
                 pos.setX(ballPosition["x"].toDouble());
+                std::cerr << "ballxPos " << pos.x() << std::endl;
             } else {
                 std::cerr << "missing ball x position" << std::endl;
             }
@@ -85,17 +86,18 @@ void StageTwoBall::addBalls(QJsonArray &ballArray)
             std::cerr << "missing both ball position" << std::endl;
         }
 
+        //check the velocity
         if (ballData.contains("velocity")) {
             QJsonObject ballVelocity = ballData["velocity"].toObject();
 
-            //check the ball's x position
+            //check the ball's x velocity
             if (ballVelocity.contains("x")) {
                 vel.setX(ballVelocity["x"].toDouble());
             } else {
                 std::cerr << "missing ball x velocity" << std::endl;
             }
 
-            //check the ball's y position
+            //check the ball's y velocity
             if (ballVelocity.contains("y")) {
                 vel.setY(ballVelocity["y"].toDouble());
             } else {
@@ -103,6 +105,15 @@ void StageTwoBall::addBalls(QJsonArray &ballArray)
             }
         } else {
             std::cerr << "ball velocity not provided" << std::endl;
+        }
+
+        //set the position relative to the parent
+        pos.setX(this->m_pos.x() + pos.x());
+        pos.setY(this->m_pos.y() + pos.y());
+
+        //check the inner ball is fully contained in the parent ball
+        if ((this->getPosition().distanceToPoint(pos) + radius) > this->m_radius) {
+            continue;
         }
 
         StageTwoBall *temp = new StageTwoBall(QColor(colour.c_str()), pos, vel, mass, radius, strength);

@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     bool stage2 = (!conf.contains("stage2") || !conf["stage2"].toBool()) ? false : true;
     // create our game based on our config
     GameDirector director(&conf);
-    // set and transfer ownership of this builder to the director
+    // set and transfer ownership of this builder to the director,
     director.setBuilder(stage2 ? new StageTwoBuilder() : new StageOneBuilder());
     AbstractPlayableGame* game = director.createGame();
 
