@@ -5,6 +5,7 @@
 #include "ball.h"
 #include "table.h"
 #include "game.h"
+#include "stagetwoball.h"
 #include <cmath>
 #include <iostream>
 #include <algorithm>
@@ -59,8 +60,6 @@ public:
 
     int getMinimumWidth() const;
 
-    bool inPocket(std::shared_ptr<Ball> const& b);
-
 private:
     Table *m_table;
     std::vector<std::shared_ptr<Ball>> *m_balls;
@@ -68,10 +67,17 @@ private:
     std::weak_ptr<Ball> whiteBall;
     QVector2D mousePos;
 
+    bool isTableCollision();
 
     void resolveCollision(Table *, Ball *);
 
-    void resolveCollision(Ball*ballA, Ball*ballB);
+    bool isCollision(const Ball *ballA, const Ball *ballB) const;
+
+    bool isBreakable(Ball *ballA, Ball *ballB);
+
+    void resolveCollision(Ball *ballA, Ball *ballB);
+
+    std::vector<std::shared_ptr<Ball>>* breakBall(Ball *ballA, Ball *ballB);
 
     /**
      * @brief hitTheWhiteBall - applies the change in velocity
@@ -79,13 +85,3 @@ private:
      */
     void hitTheWhiteBall();
 };
-
-
-/*
-    progress_bar = new QProgressBar(this);
-    progress_bar->setVisible(true);
-    progress_bar->resize(game->getMinimumWidth(), 20);
-    progress_bar->move(0, game->getMinimumHeight());
-    progress_bar->setAlignment(Qt::AlignCenter);
-    progress_bar->setValue(0);
-*/

@@ -27,6 +27,7 @@ public:
      * @param painter - QPainter that is owned by the dialog
      */
     virtual void render(QPainter &painter) = 0;
+
     /**
      * @brief translate - Move the ball's position by provided vector
      * @param vec - vector
@@ -34,11 +35,13 @@ public:
     virtual void translate(QVector2D vec) = 0;
 
     QVector2D getVelocity() const { return m_velocity; }
+
     /**
      * @brief changeVelocity - modify speed by a constant amount
      * @param delta - change in velocity (x,y)
      */
     void changeVelocity(const QVector2D& delta) { m_velocity += delta; }
+
     /**
      * @brief multiplyVelocity - apply vector multiplicatively
      * @param vel - vector

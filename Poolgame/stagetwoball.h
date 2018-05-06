@@ -13,7 +13,7 @@ class StageTwoBall : public Ball
 public:
     StageTwoBall(QColor colour, QVector2D position,
                  QVector2D velocity, double mass, int radius, double strength) :
-        Ball(colour, position, velocity, mass, radius), m_strength(strength) {}
+        Ball(colour, position, velocity, mass, radius), m_strength(strength) { std::cout << "m_strength: " << m_strength << std::endl;}
 
     ~StageTwoBall()
     {
@@ -38,6 +38,15 @@ public:
      * @param ballData
      */
     void addBalls(QJsonArray &ballArray);
+
+    /**
+     * @brief getBalls - this method returns a vector containing
+     * the balls inside this ball.
+     * @return the vector containing the inner balls of this ball.
+     */
+    std::vector<std::shared_ptr<Ball>>* getBalls();
+
+    double getStrength() const;
 
 private:
     std::vector<std::shared_ptr<Ball>> m_balls;

@@ -128,3 +128,9 @@ void StageTwoBall::addBalls(QJsonArray &ballArray)
     }
     std::cout << this->m_balls.size() << std::endl;
 }
+
+
+double StageTwoBall::getStrength() const
+{
+    return m_strength;
+}
