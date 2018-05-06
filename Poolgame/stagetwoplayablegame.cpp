@@ -346,8 +346,6 @@ bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB)
     float ballStrength = bA->getStrength();
     QVector2D deltaV = deltaVA;
     float energyOfCollision = ballMass*deltaV.lengthSquared();
-    std::cout << "already?" << std::endl;
-    std::cout << ballStrength << " " << energyOfCollision << std::endl;
     return ballStrength < energyOfCollision;
 }
 
