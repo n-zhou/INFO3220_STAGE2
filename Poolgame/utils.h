@@ -2,6 +2,7 @@
 
 #include <QVector2D>
 #include <string>
+#include <cfloat>
 
 /* filename of the config file */
 constexpr char config_path[] = "config.json";
@@ -16,7 +17,7 @@ namespace Default {
      * This namespace defines constants for the ball object.
      */
     namespace Ball {
-        constexpr double strength = 999999999;
+        constexpr double strength = FLT_MAX;
         constexpr double mass = 1.0;
         constexpr double radius = 10;
         constexpr double xPosition = 0;

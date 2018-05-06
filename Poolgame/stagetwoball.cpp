@@ -23,6 +23,11 @@ void StageTwoBall::render(QPainter &painter) {
     }
 }
 
+std::vector<std::shared_ptr<Ball>>* StageTwoBall::getBalls()
+{
+    return &m_balls;
+}
+
 
 void StageTwoBall::addBalls(QJsonArray &ballArray)
 {

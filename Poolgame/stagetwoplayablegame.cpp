@@ -104,6 +104,12 @@ void StageTwoPlayableGame::animate(double dt){
 
         // move ball due to speed
         ballA->translate(ballA->getVelocity() * dt);
+
+        //set the velocity of the ball to 0 if it's close enough to 0
+        if (std::fabs(ballA->getVelocity().x()) < 3 && std::fabs(ballA->getVelocity().y()) < 3) {
+            ballA->multiplyVelocity(QVector2D(0, 0));
+            continue;
+        }
         // apply frictionz
         ballA->changeVelocity(-ballA->getVelocity() * m_table->getFriction() * dt);
 
