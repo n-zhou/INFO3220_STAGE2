@@ -145,12 +145,16 @@ void StageTwoPlayableGame::animate(double dt){
     for (auto it = m_balls->begin(); it != m_balls->end(); ++it) {
         std::shared_ptr<Ball> ballA = *it;
         // correct ball velocity if colliding with table
-        resolveCollision(m_table, ballA.get());
+        if (isCollision(m_table, ballA.get())) {
+            resolveCollision(m_table, ballA.get());
+        }
         // check collision with all later balls
         for (auto nestedIt = it + 1; nestedIt != m_balls->end(); ++nestedIt) {
             std::shared_ptr<Ball> ballB = *nestedIt;
+
+            //check that the balls collide
             if (isCollision(ballA.get(), ballB.get())) {
-                 resolveCollision(ballA.get(), ballB.get());
+                resolveCollision(ballA.get(), ballB.get());
             }
         }
 
@@ -164,8 +168,15 @@ void StageTwoPlayableGame::animate(double dt){
         }
         // apply frictionz
         ballA->changeVelocity(-ballA->getVelocity() * m_table->getFriction() * dt);
+    }
 
-
+    //update the white ball
+    if (!whiteBall.expired()) {
+        QVector2D vel = whiteBall.lock()->getVelocity();
+        //if the ball moved during aiming, it will remove control from the player
+        if (!qFuzzyCompare(vel, QVector2D(0, 0))) {
+            m_clicked = false;
+        }
     }
 
 }
@@ -243,11 +254,10 @@ bool StageTwoPlayableGame::isCollision(const Table *table, const Ball *b) const
 {
     QVector2D bPos = b->getPosition();
 
-    //left side
     if (bPos.x() + b->getRadius() > table->getWidth()) {
         return true;
     } else if (bPos.x() - b->getRadius() < 0) {
-        return false;
+        return true;
     } else if (bPos.y() + b->getRadius() > table->getHeight()) {
         return true;
     } else if (bPos.y() - b->getRadius() < 0) {
