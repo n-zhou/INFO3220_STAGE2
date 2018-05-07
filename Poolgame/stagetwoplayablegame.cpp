@@ -1,21 +1,21 @@
 #include "stagetwoplayablegame.h"
 
-StageTwoPlayableGame::StageTwoPlayableGame(Table *table, std::vector<std::shared_ptr<Ball>> *balls)
-    : AbstractPlayableGame(), m_table(table), m_balls(balls), m_clicked(false)
+StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls)
+    : AbstractPlayableGame(), m_table(table.release()), m_balls(balls), m_clicked(false)
 {
     //set the white ball
-    for (auto b : *m_balls) {
-        if (b.get()->getColour() == QColor("white")) {
+    for (auto b : m_balls) {
+        if (b->getColour() == QColor("white")) {
             whiteBall = b;
             break;
         }
     }
 
     //remove out of bounds ball
-    for (auto i = m_balls->begin(); i != m_balls->end(); ++i) {
+    for (auto i = m_balls.begin(); i != m_balls.end(); ++i) {
         std::shared_ptr<Ball> b = *i;
-        if (isCollision(m_table, b.get())) {
-            m_balls->erase(i--);
+        if (isCollision(m_table.get(), b.get())) {
+            m_balls.erase(i--);
         }
     }
 }
@@ -71,8 +71,8 @@ void StageTwoPlayableGame::mouseDrag(QMouseEvent *e)
 void StageTwoPlayableGame::render(QPainter &painter)
 {
     m_table->render(painter);
-    for (std::shared_ptr<Ball> b : *m_balls) {
-        b.get()->render(painter);
+    for (std::shared_ptr<Ball> b : m_balls) {
+        b->render(painter);
     }
 
     //draws the line while the left mouse button is clicked
@@ -100,11 +100,11 @@ int StageTwoPlayableGame::getMinimumWidth() const
 void StageTwoPlayableGame::animate(double dt){
 
     //remove balls that are encompassed in pockets
-    for (int i = 0; i < m_balls->size(); ++i) {
-        std::shared_ptr<Ball> ballA = m_balls->at(i);
-        for (auto pocket : *(m_table->getPockets())) {
+    for (int i = 0; i < m_balls.size(); ++i) {
+        std::shared_ptr<Ball> ballA = m_balls.at(i);
+        for (auto& pocket : *m_table->getPockets()) {
             if (ballA.get()->getPosition().distanceToPoint(pocket.get()->getPos()) + ballA.get()->getRadius() <= pocket.get()->getRadius()) {
-                m_balls->erase(m_balls->begin() + i--);
+                m_balls.erase(m_balls.begin() + i--);
                 break;
             }
         }
@@ -112,44 +112,44 @@ void StageTwoPlayableGame::animate(double dt){
 
     std::vector<std::shared_ptr<Ball>> oddChildren;
 
-    for (int i = 0; i < m_balls->size(); ++i) {
-        std::shared_ptr<Ball> ballA = m_balls->at(i);
-        for (int j = i + 1; j < m_balls->size(); ++j) {
-            std::shared_ptr<Ball> ballB = m_balls->at(j);
+    for (int i = 0; i < m_balls.size(); ++i) {
+        std::shared_ptr<Ball> ballA = m_balls.at(i);
+        for (int j = i + 1; j < m_balls.size(); ++j) {
+            std::shared_ptr<Ball> ballB = m_balls.at(j);
             if (isCollision(ballA.get(), ballB.get())) {
                 if (isBreakable(ballA.get(), ballB.get()) && isBreakable(ballB.get(), ballB.get())) {
                     std::vector<std::shared_ptr<Ball>> *copy1 = breakBall(ballA.get(), ballB.get());
                     std::vector<std::shared_ptr<Ball>> *copy2 = breakBall(ballB.get(), ballA.get());
                     oddChildren.insert(oddChildren.end(), copy1->begin(), copy1->end());
                     oddChildren.insert(oddChildren.end(), copy2->begin(), copy2->end());
-                    m_balls->erase(m_balls->begin() + j);
-                    m_balls->erase(m_balls->begin() + i--);
+                    m_balls.erase(m_balls.begin() + j);
+                    m_balls.erase(m_balls.begin() + i--);
                     break;
                 } else if (isBreakable(ballA.get(), ballB.get())) {
                     std::vector<std::shared_ptr<Ball>> *copy = breakBall(ballA.get(), ballB.get());
                     oddChildren.insert(oddChildren.end(), copy->begin(), copy->end());
-                    m_balls->erase(m_balls->begin() + i--);
+                    m_balls.erase(m_balls.begin() + i--);
                     break;
                 } else if (isBreakable(ballB.get(), ballA.get())) {
                     std::vector<std::shared_ptr<Ball>> *copy = breakBall(ballB.get(), ballA.get());
                     oddChildren.insert(oddChildren.end(), copy->begin(), copy->end());
-                    m_balls->erase(m_balls->begin() + j--);
+                    m_balls.erase(m_balls.begin() + j--);
                 }
             }
 
         }
     }
 
-    m_balls->insert(m_balls->end(), oddChildren.begin(), oddChildren.end());
+    m_balls.insert(m_balls.end(), oddChildren.begin(), oddChildren.end());
 
-    for (auto it = m_balls->begin(); it != m_balls->end(); ++it) {
+    for (auto it = m_balls.begin(); it != m_balls.end(); ++it) {
         std::shared_ptr<Ball> ballA = *it;
         // correct ball velocity if colliding with table
-        if (isCollision(m_table, ballA.get())) {
-            resolveCollision(m_table, ballA.get());
+        if (isCollision(m_table.get(), ballA.get())) {
+            resolveCollision(m_table.get(), ballA.get());
         }
         // check collision with all later balls
-        for (auto nestedIt = it + 1; nestedIt != m_balls->end(); ++nestedIt) {
+        for (auto nestedIt = it + 1; nestedIt != m_balls.end(); ++nestedIt) {
             std::shared_ptr<Ball> ballB = *nestedIt;
 
             //check that the balls collide

@@ -14,12 +14,11 @@
 class StageTwoPlayableGame : public AbstractPlayableGame
 {
 public:
-    StageTwoPlayableGame(Table *table, std::vector<std::shared_ptr<Ball>> *balls);
+    StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls);
 
     ~StageTwoPlayableGame()
     {
-        delete m_table;
-        delete m_balls;
+
     }
 
     void rightClick(QMouseEvent *e);
@@ -56,8 +55,8 @@ public:
     int getMinimumWidth() const;
 
 private:
-    Table *m_table;
-    std::vector<std::shared_ptr<Ball>> *m_balls;
+    std::unique_ptr<Table> m_table;
+    std::vector<std::shared_ptr<Ball>> m_balls;
     bool m_clicked;
     std::weak_ptr<Ball> whiteBall;
     QVector2D mousePos;

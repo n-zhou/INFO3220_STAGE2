@@ -8,28 +8,25 @@
 #include <iostream>
 
 Game::~Game() {
-    // cleanup ya boi
-    //for (auto b : *m_balls) delete b;
-    delete m_balls;
-    delete m_table;
+
 }
 
 void Game::render(QPainter &painter) const {
     // table is rendered first, as its the lowest
     m_table->render(painter);
     // then render all the balls
-    for (std::shared_ptr<Ball> b : *m_balls) b->render(painter);
+    for (std::shared_ptr<Ball> b : m_balls) b->render(painter);
 }
 
 void Game::animate(double dt) {
     // (test) collide the ball with each other ball exactly once
     // to achieve this, balls only check collisions with balls "after them"
-    for (auto it = m_balls->begin(); it != m_balls->end(); ++it) {
+    for (auto it = m_balls.begin(); it != m_balls.end(); ++it) {
         std::shared_ptr<Ball> ballA = *it;
         // correct ball velocity if colliding with table
-        resolveCollision(m_table, ballA.get());
+        resolveCollision(m_table.get(), ballA.get());
         // check collision with all later balls
-        for (auto nestedIt = it + 1; nestedIt != m_balls->end(); ++nestedIt) {
+        for (auto nestedIt = it + 1; nestedIt != m_balls.end(); ++nestedIt) {
             std::shared_ptr<Ball> ballB = *nestedIt;
             resolveCollision(ballA.get(), ballB.get());
         }

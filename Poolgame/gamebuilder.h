@@ -30,8 +30,8 @@ public:
 
 class StageOneBuilder : public GameBuilder {
 protected:
-    std::vector<std::shared_ptr<Ball>>* m_buildingBalls = nullptr;
-    Table* m_buildingTable = nullptr;
+    std::vector<std::shared_ptr<Ball>> m_buildingBalls;
+    std::unique_ptr<Table> m_buildingTable;
 public:
     virtual ~StageOneBuilder();
     StageOneBuilder() : GameBuilder(new StageOneFactory()) {}

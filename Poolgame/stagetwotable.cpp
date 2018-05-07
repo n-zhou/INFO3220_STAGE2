@@ -8,7 +8,7 @@ void StageTwoTable::render(QPainter &painter)
     painter.drawRect(this->getX(), this->getY(), this->getWidth(), this->getHeight());
 
     //draw our pockets
-    for (auto p : *m_pockets) {
-        p.get()->render(painter);
+    for (auto p : m_pockets) {
+        p->render(painter);
     }
 }

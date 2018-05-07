@@ -22,7 +22,7 @@ std::shared_ptr<Ball> StageOneFactory::makeBall(const QJsonObject& ballData) {
 
     return std::shared_ptr<Ball>(new StageOneBall(QColor(col), QVector2D(xpos, ypos), QVector2D(xvel, yvel), mass, radius));
 }
-Table* StageOneFactory::makeTable(const QJsonObject& tableData) {
+std::unique_ptr<Table> StageOneFactory::makeTable(const QJsonObject& tableData) {
     // create a stage one table based on the fed in json data
     QString colour = tableData.value("colour").toString();
 
@@ -33,5 +33,5 @@ Table* StageOneFactory::makeTable(const QJsonObject& tableData) {
 
     double friction = tableData.value("friction").toDouble();
 
-    return new StageOneTable(width, height, QColor(colour), friction);
+    return std::unique_ptr<Table>(new StageOneTable(width, height, QColor(colour), friction));
 }

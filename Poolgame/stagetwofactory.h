@@ -25,5 +25,5 @@ public:
      * @param tableData - our json data for this table
      * @return
      */
-    virtual Table* makeTable(const QJsonObject& tableData) override;
+    virtual std::unique_ptr<Table> makeTable(const QJsonObject& tableData) override;
 };

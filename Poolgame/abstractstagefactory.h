@@ -13,10 +13,11 @@ public:
      * @return our newly created ball
      */
     virtual std::shared_ptr<Ball> makeBall(const QJsonObject& ballData) = 0;
+
     /**
      * @brief makeTable - construct a table based on json provided
      * @param tableData - json that conforms to the spec
      * @return our newly created table
      */
-    virtual Table* makeTable(const QJsonObject& tableData) = 0;
+    virtual std::unique_ptr<Table> makeTable(const QJsonObject& tableData) = 0;
 };

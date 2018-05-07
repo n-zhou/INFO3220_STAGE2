@@ -7,20 +7,11 @@
 #include <QJsonArray>
 
 StageOneBuilder::~StageOneBuilder() {
-    // delete state if building not collected...
-    if (m_buildingTable != nullptr) delete m_buildingTable;
-    if (m_buildingBalls != nullptr) {
-        //for (Ball* b : *m_buildingBalls) delete b;
-        delete m_buildingBalls;
-    }
+
 }
 
 void StageOneBuilder::addBall(QJsonObject &ballData) {
-    // if we haven't already started building
-    if (m_buildingBalls == nullptr) {
-        m_buildingBalls = new std::vector<std::shared_ptr<Ball>>();
-    }
-    m_buildingBalls->push_back(std::move(m_factory->makeBall(ballData)));
+    m_buildingBalls.push_back(std::move(m_factory->makeBall(ballData)));
 }
 
 void StageOneBuilder::addTable(QJsonObject &tableData) {
@@ -30,12 +21,7 @@ void StageOneBuilder::addTable(QJsonObject &tableData) {
 }
 
 AbstractPlayableGame* StageOneBuilder::getResult() {
-    // no-one called addBall
-    if (m_buildingBalls == nullptr) {
-        // soft fail
-        std::cerr << "warning! pool game without balls created...\n";
-        m_buildingBalls = new std::vector<std::shared_ptr<Ball>>();
-    }
+
     // likewise for table
     if (m_buildingTable == nullptr) {
         throw std::invalid_argument("builder finished with no table supplied");
@@ -43,7 +29,7 @@ AbstractPlayableGame* StageOneBuilder::getResult() {
 
     Game* retGame = new Game(m_buildingBalls, m_buildingTable);
     // need to reset for when we build next
-    m_buildingBalls = nullptr;
+    m_buildingBalls.clear();
     m_buildingTable = nullptr;
     return new StageOneAdaptor(retGame);
 }

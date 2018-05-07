@@ -86,18 +86,18 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
     return std::shared_ptr<Ball>(ret);
 }
 
-Table* StageTwoFactory::makeTable(const QJsonObject &tableData)
+std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData)
 {
     int width = Default::Table::x;
     int height = Default::Table::y;
     std::string colour = Default::Table::colour;
     double friction = Default::Table::friction;
-    std::vector<std::shared_ptr<Pocket>> *pockets = new std::vector<std::shared_ptr<Pocket>>();
+    std::vector<std::shared_ptr<Pocket>> pockets;
 
     //if the table is missing from the config file we operate like stage one
     if (tableData.empty()) {
         std::cerr << "table missing from config file...initialising to default";
-        return new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets);
+        return std::unique_ptr<Table>(new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets));
     }
 
 
@@ -165,14 +165,14 @@ Table* StageTwoFactory::makeTable(const QJsonObject &tableData)
                 int pX = position["x"].toDouble();
                 int pY = position["y"].toDouble();
 
-                pockets->push_back(std::make_shared<Pocket>(Pocket(QVector2D(pX, pY), radius)));
+                pockets.push_back(std::make_shared<Pocket>(Pocket(QVector2D(pX, pY), radius)));
             } else {
                 std::cerr << "missing pocket data, pocket ignored." << std::endl;
             }
         }
     }
 
-    return new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets);
+    return std::unique_ptr<Table>(new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets));
 
 
 }
