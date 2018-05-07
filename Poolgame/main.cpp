@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
     // display our dialog that contains our game and run
     QApplication a(argc, argv);
     Dialog w(game, nullptr);
+    if (stage2)
+        w.setFixedSize(w.size());
     w.show();
 
     return a.exec();

@@ -72,13 +72,19 @@ void StageTwoPlayableGame::mouseDrag(QMouseEvent *e)
 
 void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event)
 {
-
-    //
     std::string key = event->text().toStdString();
     if (key == "s" || key == "S") {
         if (!m_whiteBall.expired()) {
-
+            m_whiteBall.lock()->multiplyVelocity(QVector2D(0, 0));
+            std::cout << "YOU STOPPED THE WHITE BALL YOU CHEATER" << std::endl;
+        } else {
+            std::cout << "Can't stop the white ball when it's pocketed :(" << std::endl;
         }
+    }
+    if (event->key() == Qt::Key_Control) {
+        m_balls.push_back(std::shared_ptr<Ball>(new StageTwoBall(QColor("white"), QVector2D(100, 100),
+                                                                 QVector2D(0, 0), 100, 10, Default::Ball::strength)));
+        m_whiteBall = m_balls.back();
     }
 }
 
