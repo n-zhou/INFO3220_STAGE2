@@ -13,7 +13,7 @@ class StageTwoBall : public Ball
 public:
     StageTwoBall(QColor colour, QVector2D position,
                  QVector2D velocity, double mass, int radius, double strength) :
-        Ball(colour, position, velocity, mass, radius), m_strength(strength) { std::cout << "m_strength: " << m_strength << std::endl;}
+        Ball(colour, position, velocity, mass, radius), m_strength(strength) {}
 
     ~StageTwoBall()
     {

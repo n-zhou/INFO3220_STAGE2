@@ -10,6 +10,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include <QDebug>
 class StageTwoPlayableGame : public AbstractPlayableGame
 {
 public:
@@ -32,9 +33,9 @@ public:
     void mouseDrag(QMouseEvent *e);
 
     void keyPressEvent(QKeyEvent *event) {
-        std::cout << whiteBall.use_count() << std::endl;
         if (!whiteBall.expired()) {
-            whiteBall.lock()->multiplyVelocity(QVector2D(0, 0));
+            //whiteBall.lock()->multiplyVelocity(QVector2D(0, 0));
+            qDebug() << whiteBall.lock()->getVelocity();
         }
     }
 

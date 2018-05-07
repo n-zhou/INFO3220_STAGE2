@@ -52,7 +52,7 @@ void StageTwoPlayableGame::leftClick(QMouseEvent *e)
 
 void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e)
 {
-    if (m_clicked) {
+    if (m_clicked && !whiteBall.expired()) {
         mousePos.setX(e->x());
         mousePos.setY(e->y());
         hitTheWhiteBall();
@@ -62,7 +62,7 @@ void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e)
 
 void StageTwoPlayableGame::mouseDrag(QMouseEvent *e)
 {
-    if (m_clicked) {
+    if (m_clicked && !whiteBall.expired()) {
         mousePos.setX(e->x());
         mousePos.setY(e->y());
     }
