@@ -102,11 +102,11 @@ int StageTwoPlayableGame::getMinimumWidth() const
 void StageTwoPlayableGame::animate(double dt){
 
     //remove balls that are encompassed in pockets
-    for (auto it = m_balls->begin(); it != m_balls->end(); ++it) {
-        std::shared_ptr<Ball> ballA = *it;
+    for (int i = 0; i < m_balls->size(); ++i) {
+        std::shared_ptr<Ball> ballA = m_balls->at(i);
         for (auto pocket : *(m_table->getPockets())) {
             if (ballA.get()->getPosition().distanceToPoint(pocket.get()->getPos()) + ballA.get()->getRadius() <= pocket.get()->getRadius()) {
-                m_balls->erase(it--);
+                m_balls->erase(m_balls->begin() + i--);
                 break;
             }
         }
