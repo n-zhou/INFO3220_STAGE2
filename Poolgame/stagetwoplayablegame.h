@@ -33,6 +33,9 @@ public:
 
     void keyPressEvent(QKeyEvent *event) {
         std::cout << whiteBall.use_count() << std::endl;
+        if (!whiteBall.expired()) {
+            whiteBall.lock()->multiplyVelocity(QVector2D(0, 0));
+        }
     }
 
     /**

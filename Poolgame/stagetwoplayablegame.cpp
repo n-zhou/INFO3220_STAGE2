@@ -395,17 +395,15 @@ void StageTwoPlayableGame::hitTheWhiteBall()
     //ball A
     QVector2D posA = whiteBall.lock()->getPosition();
     QVector2D velA = whiteBall.lock()->getVelocity();
-    float massA = whiteBall.lock()->getMass();
     //and ball B is actually the cue lol
     QVector2D posB = mousePos;
-    QVector2D velB = (posA - posB) / 5;
-    float massB = massA;
+    QVector2D velB = (posA - posB) / 3;
 
     //calculate their mass ratio
-    float mR = massB / massA;
+    float mR = 1;
 
     //calculate the axis of collision
-    QVector2D collisionVector = posB / posA;
+    QVector2D collisionVector = posB - posA;
     collisionVector.normalize();
 
    //the proportion of each balls velocity along the axis of collision
@@ -432,10 +430,9 @@ void StageTwoPlayableGame::hitTheWhiteBall()
     }
 
 
-    //The resulting changes in velocity for ball A and B
+    //The resulting changes in velocity for the cue ball
     whiteBall.lock()->changeVelocity(mR * (vB - root) * collisionVector);
-    //since Ball B is not a real ball we don't actually change the velocity
-    //QVector2D deltaVB = (root - vB) * collisionVector;
+
 }
 
 
