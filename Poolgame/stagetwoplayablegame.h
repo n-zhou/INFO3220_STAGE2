@@ -13,16 +13,7 @@
 class StageTwoPlayableGame : public AbstractPlayableGame
 {
 public:
-    StageTwoPlayableGame(Table *table, std::vector<std::shared_ptr<Ball>> *balls)
-        : AbstractPlayableGame(), m_table(table), m_balls(balls), m_clicked(false)
-    {
-        for (auto b : *m_balls) {
-            if (b.get()->getColour() == QColor("white")) {
-                whiteBall = b;
-                break;
-            }
-        }
-    }
+    StageTwoPlayableGame(Table *table, std::vector<std::shared_ptr<Ball>> *balls);
 
     ~StageTwoPlayableGame()
     {
@@ -67,7 +58,7 @@ private:
     std::weak_ptr<Ball> whiteBall;
     QVector2D mousePos;
 
-    bool isTableCollision();
+    bool isCollision(const Table *table, const Ball *b) const;
 
     void resolveCollision(Table *, Ball *);
 

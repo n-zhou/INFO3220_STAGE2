@@ -1,5 +1,24 @@
 #include "stagetwoplayablegame.h"
 
+StageTwoPlayableGame::StageTwoPlayableGame(Table *table, std::vector<std::shared_ptr<Ball>> *balls)
+    : AbstractPlayableGame(), m_table(table), m_balls(balls), m_clicked(false)
+{
+    //set the white ball
+    for (auto b : *m_balls) {
+        if (b.get()->getColour() == QColor("white")) {
+            whiteBall = b;
+            break;
+        }
+    }
+
+    //remove out of bounds ball
+    for (auto i = m_balls->begin(); i != m_balls->end(); ++i) {
+        std::shared_ptr<Ball> b = *i;
+        if (isCollision(m_table, b.get())) {
+            m_balls->erase(i--);
+        }
+    }
+}
 
 void StageTwoPlayableGame::rightClick(QMouseEvent *e)
 {
@@ -220,6 +239,24 @@ std::vector<std::shared_ptr<Ball>>* StageTwoPlayableGame::breakBall(Ball *ballA,
         child.get()->changeVelocity(componentBallVelocity);
     }
     return children;
+}
+
+bool StageTwoPlayableGame::isCollision(const Table *table, const Ball *b) const
+{
+    QVector2D bPos = b->getPosition();
+
+    //left side
+    if (bPos.x() + b->getRadius() > table->getWidth()) {
+        return true;
+    } else if (bPos.x() - b->getRadius() < 0) {
+        return false;
+    } else if (bPos.y() + b->getRadius() > table->getHeight()) {
+        return true;
+    } else if (bPos.y() - b->getRadius() < 0) {
+        return true;
+    }
+
+    return false;
 }
 
 void StageTwoPlayableGame::resolveCollision(Table *table, Ball *ball)
