@@ -97,8 +97,6 @@ int StageTwoPlayableGame::getMinimumWidth() const
     return m_table->getWidth();
 }
 
-#include <QDebug>
-#include <map>
 void StageTwoPlayableGame::animate(double dt){
 
     //remove balls that are encompassed in pockets
@@ -400,8 +398,8 @@ void StageTwoPlayableGame::hitTheWhiteBall()
     float massA = whiteBall.lock()->getMass();
     //and ball B is actually the cue lol
     QVector2D posB = mousePos;
-    QVector2D velB = (posA - posB) / 10;
-    float massB = 10;
+    QVector2D velB = (posA - posB) / 5;
+    float massB = massA;
 
     //calculate their mass ratio
     float mR = massB / massA;

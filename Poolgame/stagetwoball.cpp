@@ -126,7 +126,6 @@ void StageTwoBall::addBalls(QJsonArray &ballArray)
         temp->addBalls(ballArray1);
         this->m_balls.push_back(std::shared_ptr<Ball>(temp));
     }
-    std::cout << this->m_balls.size() << std::endl;
 }
 
 
