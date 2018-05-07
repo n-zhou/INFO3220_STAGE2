@@ -114,28 +114,28 @@ void StageTwoPlayableGame::animate(double dt){
 
     std::vector<std::shared_ptr<Ball>> oddChildren;
 
-    for (auto it = m_balls->begin(); it != m_balls->end(); ++it) {
-        std::shared_ptr<Ball> ballA = *it;
-        for (auto nestedIt = it + 1; nestedIt != m_balls->end(); ++nestedIt) {
-            std::shared_ptr<Ball> ballB = *nestedIt;
+    for (int i = 0; i < m_balls->size(); ++i) {
+        std::shared_ptr<Ball> ballA = m_balls->at(i);
+        for (int j = i + 1; j < m_balls->size(); ++j) {
+            std::shared_ptr<Ball> ballB = m_balls->at(j);
             if (isCollision(ballA.get(), ballB.get())) {
                 if (isBreakable(ballA.get(), ballB.get()) && isBreakable(ballB.get(), ballB.get())) {
                     std::vector<std::shared_ptr<Ball>> *copy1 = breakBall(ballA.get(), ballB.get());
                     std::vector<std::shared_ptr<Ball>> *copy2 = breakBall(ballB.get(), ballA.get());
                     oddChildren.insert(oddChildren.end(), copy1->begin(), copy1->end());
                     oddChildren.insert(oddChildren.end(), copy2->begin(), copy2->end());
-                    m_balls->erase(nestedIt);
-                    m_balls->erase(it--);
+                    m_balls->erase(m_balls->begin() + j);
+                    m_balls->erase(m_balls->begin() + i--);
                     break;
                 } else if (isBreakable(ballA.get(), ballB.get())) {
                     std::vector<std::shared_ptr<Ball>> *copy = breakBall(ballA.get(), ballB.get());
                     oddChildren.insert(oddChildren.end(), copy->begin(), copy->end());
-                    m_balls->erase(it--);
+                    m_balls->erase(m_balls->begin() + i--);
                     break;
                 } else if (isBreakable(ballB.get(), ballA.get())) {
                     std::vector<std::shared_ptr<Ball>> *copy = breakBall(ballB.get(), ballA.get());
                     oddChildren.insert(oddChildren.end(), copy->begin(), copy->end());
-                    m_balls->erase(nestedIt--);
+                    m_balls->erase(m_balls->begin() + j--);
                 }
             }
 
