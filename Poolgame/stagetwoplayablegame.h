@@ -31,12 +31,7 @@ public:
 
     void mouseDrag(QMouseEvent *e);
 
-    void keyPressEvent(QKeyEvent *event) {
-        if (!whiteBall.expired()) {
-            //whiteBall.lock()->multiplyVelocity(QVector2D(0, 0));
-            qDebug() << whiteBall.lock()->getVelocity();
-        }
-    }
+    void keyPressEvent(QKeyEvent *event);
 
     /**
      * @brief render - Draws the game onto the screen
@@ -58,8 +53,8 @@ private:
     std::unique_ptr<Table> m_table;
     std::vector<std::shared_ptr<Ball>> m_balls;
     bool m_clicked;
-    std::weak_ptr<Ball> whiteBall;
-    QVector2D mousePos;
+    std::weak_ptr<Ball> m_whiteBall;
+    QVector2D m_mousePos;
 
     bool isCollision(const Table *table, const Ball *b) const;
 

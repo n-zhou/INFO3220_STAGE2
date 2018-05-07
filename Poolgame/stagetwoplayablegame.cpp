@@ -1,4 +1,6 @@
 #include "stagetwoplayablegame.h"
+#include <string>
+
 
 StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls)
     : AbstractPlayableGame(), m_table(table.release()), m_balls(balls), m_clicked(false)
@@ -6,7 +8,7 @@ StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::v
     //set the white ball
     for (auto b : m_balls) {
         if (b->getColour() == QColor("white")) {
-            whiteBall = b;
+            m_whiteBall = b;
             break;
         }
     }
@@ -34,27 +36,27 @@ void StageTwoPlayableGame::rightClickRelease(QMouseEvent *e)
 
 void StageTwoPlayableGame::leftClick(QMouseEvent *e)
 {
-    if (whiteBall.expired()) {
+    if (m_whiteBall.expired()) {
         return;
     }
-    QVector2D velocity = whiteBall.lock()->getVelocity();
+    QVector2D velocity = m_whiteBall.lock()->getVelocity();
     //we allow an epsilon on 2 when deciding whether the white ball is stationary
     if (std::fabs(velocity.x()) > 2 || std::fabs(velocity.y()) > 2) {
         std::cout << "You can only hit the cue when it's not moving!" << std::endl;
         return;
     }
-    mousePos.setX(e->x());
-    mousePos.setY(e->y());
-    if (whiteBall.lock()->getPosition().distanceToPoint(mousePos) <= whiteBall.lock()->getRadius()) {
+    m_mousePos.setX(e->x());
+    m_mousePos.setY(e->y());
+    if (m_whiteBall.lock()->getPosition().distanceToPoint(m_mousePos) <= m_whiteBall.lock()->getRadius()) {
         m_clicked = true;
     }
 }
 
 void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e)
 {
-    if (m_clicked && !whiteBall.expired()) {
-        mousePos.setX(e->x());
-        mousePos.setY(e->y());
+    if (m_clicked && !m_whiteBall.expired()) {
+        m_mousePos.setX(e->x());
+        m_mousePos.setY(e->y());
         hitTheWhiteBall();
         m_clicked = false;
     }
@@ -62,9 +64,21 @@ void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e)
 
 void StageTwoPlayableGame::mouseDrag(QMouseEvent *e)
 {
-    if (m_clicked && !whiteBall.expired()) {
-        mousePos.setX(e->x());
-        mousePos.setY(e->y());
+    if (m_clicked && !m_whiteBall.expired()) {
+        m_mousePos.setX(e->x());
+        m_mousePos.setY(e->y());
+    }
+}
+
+void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event)
+{
+
+    //
+    std::string key = event->text().toStdString();
+    if (key == "s" || key == "S") {
+        if (!m_whiteBall.expired()) {
+
+        }
     }
 }
 
@@ -76,13 +90,13 @@ void StageTwoPlayableGame::render(QPainter &painter)
     }
 
     //draws the line while the left mouse button is clicked
-    if (m_clicked && !whiteBall.expired()) {
+    if (m_clicked && !m_whiteBall.expired()) {
         //thickness of the line is set to illustrate power of shot
         painter.save();
-        double distance = whiteBall.lock()->getPosition().distanceToPoint(mousePos);
+        double distance = m_whiteBall.lock()->getPosition().distanceToPoint(m_mousePos);
         int thickness = std::fmin(distance/60, 10);
         painter.setPen(QPen(Qt::black, thickness, Qt::DotLine, Qt::RoundCap));
-        painter.drawLine(whiteBall.lock()->getPosition().toPointF(), mousePos.toPointF());
+        painter.drawLine(m_whiteBall.lock()->getPosition().toPointF(), m_mousePos.toPointF());
         painter.restore();
     }
 }
@@ -171,8 +185,8 @@ void StageTwoPlayableGame::animate(double dt){
     }
 
     //update the white ball
-    if (!whiteBall.expired()) {
-        QVector2D vel = whiteBall.lock()->getVelocity();
+    if (!m_whiteBall.expired()) {
+        QVector2D vel = m_whiteBall.lock()->getVelocity();
         //if the ball moved during aiming, it will remove control from the player
         if (!qFuzzyCompare(vel, QVector2D(0, 0))) {
             m_clicked = false;
@@ -403,10 +417,10 @@ void StageTwoPlayableGame::hitTheWhiteBall()
 {
     //Properties of two colliding balls,
     //ball A
-    QVector2D posA = whiteBall.lock()->getPosition();
-    QVector2D velA = whiteBall.lock()->getVelocity();
+    QVector2D posA = m_whiteBall.lock()->getPosition();
+    QVector2D velA = m_whiteBall.lock()->getVelocity();
     //and ball B is actually the cue lol
-    QVector2D posB = mousePos;
+    QVector2D posB = m_mousePos;
     QVector2D velB = (posA - posB) / 3;
 
     //calculate their mass ratio
@@ -441,7 +455,7 @@ void StageTwoPlayableGame::hitTheWhiteBall()
 
 
     //The resulting changes in velocity for the cue ball
-    whiteBall.lock()->changeVelocity(mR * (vB - root) * collisionVector);
+    m_whiteBall.lock()->changeVelocity(mR * (vB - root) * collisionVector);
 
 }
 
