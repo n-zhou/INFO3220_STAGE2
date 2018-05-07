@@ -46,6 +46,7 @@ public:
      */
     std::vector<std::shared_ptr<Ball>>* getBalls();
 
+    double getMass();
     double getStrength() const;
 
 private:

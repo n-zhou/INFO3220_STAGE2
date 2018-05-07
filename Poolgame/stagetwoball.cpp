@@ -133,3 +133,12 @@ double StageTwoBall::getStrength() const
 {
     return m_strength;
 }
+
+double StageTwoBall::getMass()
+{
+    double mass = m_mass;
+    for (auto b : m_balls) {
+        mass += b->getMass();
+    }
+    return mass;
+}

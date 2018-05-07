@@ -47,7 +47,7 @@ public:
      * @param vel - vector
      */
     void multiplyVelocity(const QVector2D& vel) { m_velocity *= vel; }
-    double getMass() const { return m_mass; }
+    virtual double getMass() const { return m_mass; }
     double getRadius() const { return m_radius; }
     QVector2D getPosition() const { return m_pos; }
     QColor getColour() const { return m_brush.color(); }
