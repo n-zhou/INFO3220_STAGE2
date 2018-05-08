@@ -14,6 +14,7 @@
 #include <QString>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <utility>
 
 QJsonObject loadConfig() {
     // load json from config file
@@ -31,15 +32,15 @@ int main(int argc, char *argv[])
 {
     QJsonObject conf = loadConfig();
     bool stage2 = (!conf.contains("stage2") || !conf["stage2"].toBool()) ? false : true;
-    // create our game based on our config
+    // create our gambased on our config
     GameDirector director(&conf);
     // set and transfer ownership of this builder to the director,
     director.setBuilder(stage2 ? new StageTwoBuilder() : new StageOneBuilder());
-    AbstractPlayableGame* game = director.createGame();
+    std::unique_ptr<AbstractPlayableGame> game = director.createGame();
 
     // display our dialog that contains our game and run
     QApplication a(argc, argv);
-    Dialog w(game, nullptr);
+    Dialog w(std::move(game), nullptr);
     if (stage2)
         w.setFixedSize(w.size());
     w.show();

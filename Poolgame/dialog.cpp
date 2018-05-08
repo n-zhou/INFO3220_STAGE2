@@ -3,16 +3,17 @@
 #include <QPainter>
 #include <QTimer>
 #include <iostream>
+#include <utility>
 #include "utils.h"
 
 //nzho8446 added headers
 #include <QMouseEvent>
 #include <cmath>
 
-Dialog::Dialog(AbstractPlayableGame *game, QWidget* parent) :
+Dialog::Dialog(std::unique_ptr<AbstractPlayableGame> game, QWidget* parent) :
     QDialog(parent),
     ui(new Ui::Dialog),
-    m_game(game)
+    m_game(std::move(game))
 {
     this->setWindowTitle("Cameron please give me 100%");
     ui->setupUi(this);
@@ -26,9 +27,8 @@ Dialog::Dialog(AbstractPlayableGame *game, QWidget* parent) :
     dTimer = new QTimer(this);
     connect(dTimer, SIGNAL(timeout()), this, SLOT(tryRender()));
     dTimer->start(drawFrameMS);
-
     // set the window size to be at least the table size
-    this->resize(game->getMinimumWidth(), game->getMinimumHeight());
+    this->resize(m_game->getMinimumWidth(), m_game->getMinimumHeight());
     this->setMouseTracking(true);
 
 
@@ -67,7 +67,6 @@ Dialog::~Dialog()
 {
     delete aTimer;
     delete dTimer;
-    delete m_game;
     delete ui;
 }
 

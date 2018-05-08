@@ -1,6 +1,6 @@
 #include "stagetwobuilder.h"
 
-AbstractPlayableGame* StageTwoBuilder::getResult()
+std::unique_ptr<AbstractPlayableGame> StageTwoBuilder::getResult()
 {
 
     // likewise for table
@@ -12,5 +12,5 @@ AbstractPlayableGame* StageTwoBuilder::getResult()
     //need to reset for when we build next
     m_buildingBalls.clear();
     m_buildingTable = nullptr;
-    return retGame;
+    return std::unique_ptr<AbstractPlayableGame>(retGame);
 }

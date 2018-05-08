@@ -16,7 +16,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(AbstractPlayableGame* game, QWidget *parent = 0);
+    explicit Dialog(std::unique_ptr<AbstractPlayableGame> game, QWidget *parent = 0);
     ~Dialog();
 
 protected:
@@ -70,7 +70,7 @@ private:
     /**
      * @brief m_game - our game object to be played
      */
-    AbstractPlayableGame* m_game = nullptr;
+    std::unique_ptr<AbstractPlayableGame> m_game;
 
 };
 

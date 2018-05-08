@@ -20,7 +20,7 @@ void StageOneBuilder::addTable(QJsonObject &tableData) {
     m_buildingTable = m_factory->makeTable(tableData);
 }
 
-AbstractPlayableGame* StageOneBuilder::getResult() {
+std::unique_ptr<AbstractPlayableGame> StageOneBuilder::getResult() {
 
     // likewise for table
     if (m_buildingTable == nullptr) {
@@ -31,10 +31,10 @@ AbstractPlayableGame* StageOneBuilder::getResult() {
     // need to reset for when we build next
     m_buildingBalls.clear();
     m_buildingTable = nullptr;
-    return new StageOneAdaptor(retGame);
+    return std::unique_ptr<AbstractPlayableGame>(new StageOneAdaptor(retGame));
 }
 
-AbstractPlayableGame* GameDirector::createGame() {
+std::unique_ptr<AbstractPlayableGame> GameDirector::createGame() {
     // construct our table
     QJsonObject tableData = m_conf->value("table").toObject();
     m_builder->addTable(tableData);

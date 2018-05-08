@@ -14,6 +14,6 @@ public:
      * @brief getResult - retrieve the building
      * @return
      */
-    AbstractPlayableGame* getResult();
+    std::unique_ptr<AbstractPlayableGame> getResult();
 };
 

@@ -2,6 +2,7 @@
 #include "stageonefactory.h"
 #include "game.h"
 #include "abstractplayablegame.h"
+#include <memory>
 
 class GameBuilder {
 protected:
@@ -25,7 +26,7 @@ public:
      * @brief getResult - retrieve the building
      * @return
      */
-    virtual AbstractPlayableGame* getResult() = 0;
+    virtual std::unique_ptr<AbstractPlayableGame> getResult() = 0;
 };
 
 class StageOneBuilder : public GameBuilder {
@@ -59,7 +60,7 @@ public:
      * @brief getResult - retrieve the building
      * @return
      */
-    virtual AbstractPlayableGame* getResult() override;
+    virtual std::unique_ptr<AbstractPlayableGame> getResult() override;
 };
 
 class GameDirector {
@@ -77,5 +78,5 @@ public:
      * @brief createGame - retrieve the building that our owned builder created
      * @return - the newly created game
      */
-    AbstractPlayableGame* createGame();
+    std::unique_ptr<AbstractPlayableGame> createGame();
 };
