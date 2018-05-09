@@ -7,6 +7,13 @@
 #include "stagetwotable.h"
 #include "stagetwoball.h"
 
+/**
+ * @brief The StageTwoFactory class
+ *
+ * @author nzho8446
+ * @since Stage 2
+ * @see AbstractStageFactory
+ */
 class StageTwoFactory : public AbstractStageFactory {
 
 public:

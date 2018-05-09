@@ -1,6 +1,22 @@
 #pragma once
 #include "abstractstagefactory.h"
 
+/**
+ * @brief The StageOneFactory class
+ *
+ * <p>
+ * This class has been modified from returning raw pointers in its methods
+ * to returning smart pointers. The original interface of this class returned
+ * raw pointers. Since that interface was modified to return smart pointers of
+ * objects, this class was modified such that it still conformed to the interface it
+ * inherited from.
+ * </p>
+ *
+ * @author "James Butcher"
+ * @author nzho8446
+ * @since Stage 1
+ * @see AbstractStageFactory
+ */
 class StageOneFactory : public AbstractStageFactory {
 public:
     /**

@@ -4,6 +4,13 @@
 #include "ball.h"
 #include "table.h"
 
+/**
+ * @brief The AbstractStageFactory class
+ *
+ * @author "James Butcher"
+ * @since Stage 1
+ */
+
 class AbstractStageFactory {
 public:
     virtual ~AbstractStageFactory(){}

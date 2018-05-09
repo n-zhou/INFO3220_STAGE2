@@ -4,6 +4,11 @@
 #include "abstractplayablegame.h"
 #include <memory>
 
+/**
+ * @brief The GameBuilder class
+ *
+ * @since Stage 1
+ */
 class GameBuilder {
 protected:
     AbstractStageFactory* m_factory = nullptr;
@@ -29,6 +34,14 @@ public:
     virtual std::unique_ptr<AbstractPlayableGame> getResult() = 0;
 };
 
+/**
+ * @brief The StageOneBuilder class
+ *
+ * @author "James Butcher"
+ *
+ * @since Stage 1
+ * @see GameBuilder
+ */
 class StageOneBuilder : public GameBuilder {
 protected:
     std::vector<std::shared_ptr<Ball>> m_buildingBalls;
@@ -63,6 +76,13 @@ public:
     virtual std::unique_ptr<AbstractPlayableGame> getResult() override;
 };
 
+/**
+ * @brief The GameDirector class
+ *
+ * @author "James Butcher"
+ * @author nzho8446
+ * @since Stage 1
+ */
 class GameDirector {
     GameBuilder* m_builder;
     const QJsonObject* m_conf;

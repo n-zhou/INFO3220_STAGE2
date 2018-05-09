@@ -8,6 +8,12 @@
 #include <QJsonObject>
 #include <iostream>
 
+/**
+ * @brief The StageTwoBall class
+ *
+ * @author nzho8446
+ * @see Ball
+ */
 class StageTwoBall : public Ball {
 public:
     StageTwoBall(QColor colour,

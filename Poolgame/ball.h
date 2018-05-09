@@ -10,8 +10,7 @@
  *
  * @author "James Butcher"
  * @author nzho8446
- *
- *
+ * @since Stage 1
  */
 
 class Ball {

@@ -10,6 +10,14 @@
 #include <iostream>
 #include <algorithm>
 
+/**
+ * @brief The StageTwoPlayableGame class
+ *
+ * @author nzho8446
+ * @see AbstractPlayableGame
+ * @since Stage 2
+ */
+
 class StageTwoPlayableGame : public AbstractPlayableGame {
 public:
     StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls);
@@ -26,6 +34,10 @@ public:
 
     void mouseDrag(QMouseEvent *e);
 
+    /**
+     * @brief keyPressEvent
+     * @param event - the QKeyEvent associated with the keypress
+     */
     void keyPressEvent(QKeyEvent *event);
 
     /**

@@ -6,6 +6,14 @@
 #include <memory>
 #include "pocket.h"
 
+
+/**
+ * @brief The Table class
+ *
+ * @author "James Butcher"
+ *
+ * @since Stage 1
+ */
 class Table {
 protected:
     int m_width;

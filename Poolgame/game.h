@@ -3,6 +3,11 @@
 #include <QJsonObject>
 #include "abstractstagefactory.h"
 
+/**
+ * @brief The Game class
+ * @author "James Butcher"
+ * @since Stage 1
+ */
 class Game {
     std::vector<std::shared_ptr<Ball>> m_balls;
     std::unique_ptr<Table> m_table;

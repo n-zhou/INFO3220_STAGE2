@@ -5,6 +5,13 @@
 #include "stagetwoplayablegame.h"
 #include "stagetwofactory.h"
 
+/**
+ * @brief The StageTwoBuilder class
+ *
+ * @author nzho8446
+ * @see StageOneBuilder
+ * @see GameBuilder
+ */
 class StageTwoBuilder : public StageOneBuilder {
 public:
     StageTwoBuilder() : StageOneBuilder(new StageTwoFactory()) {}
