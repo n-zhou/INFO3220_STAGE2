@@ -87,6 +87,7 @@ public:
 
     /**
      * @brief getMinimumHeight
+     *
      * @return the minimum height required for the window
      * to be to display the objects in the game
      */
@@ -94,6 +95,7 @@ public:
 
     /**
      * @brief getMinimumWidth
+     *
      * @return the minimum width requried for the window
      * to be to display the objects in the game
      */

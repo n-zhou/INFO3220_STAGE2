@@ -15,7 +15,7 @@ void Game::render(QPainter &painter) const {
     // table is rendered first, as its the lowest
     m_table->render(painter);
     // then render all the balls
-    for (std::shared_ptr<Ball> b : m_balls) b->render(painter);
+    for (auto b : m_balls) b->render(painter);
 }
 
 void Game::animate(double dt) {
