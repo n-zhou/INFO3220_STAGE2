@@ -10,16 +10,11 @@
 #include <iostream>
 #include <algorithm>
 
-#include <QDebug>
-class StageTwoPlayableGame : public AbstractPlayableGame
-{
+class StageTwoPlayableGame : public AbstractPlayableGame {
 public:
     StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls);
 
-    ~StageTwoPlayableGame()
-    {
-
-    }
+    ~StageTwoPlayableGame() {}
 
     void rightClick(QMouseEvent *e);
 
@@ -45,8 +40,18 @@ public:
      */
     void animate(double dt);
 
+    /**
+     * @brief getMinimumHeight
+     * @return the minimum height required for the window
+     * to be to display the objects in the game
+     */
     int getMinimumHeight() const;
 
+    /**
+     * @brief getMinimumWidth
+     * @return the minimum width requried for the window
+     * to be to display the objects in the game
+     */
     int getMinimumWidth() const;
 
 private:

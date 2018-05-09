@@ -1,5 +1,4 @@
 #include "ball.h"
-#include <iostream>
 void StageOneBall::translate(QVector2D vec) {
     m_pos += vec;
 }

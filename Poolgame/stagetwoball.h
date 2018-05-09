@@ -8,12 +8,16 @@
 #include <QJsonObject>
 #include <iostream>
 
-class StageTwoBall : public Ball
-{
+class StageTwoBall : public Ball {
 public:
-    StageTwoBall(QColor colour, QVector2D position,
-                 QVector2D velocity, double mass, int radius, double strength) :
-        Ball(colour, position, velocity, mass, radius), m_strength(strength) {}
+    StageTwoBall(QColor colour,
+                 QVector2D position,
+                 QVector2D velocity,
+                 double mass,
+                 int radius,
+                 double strength) :
+        Ball(colour, position, velocity, mass, radius),
+        m_strength(strength) {}
 
     ~StageTwoBall()
     {

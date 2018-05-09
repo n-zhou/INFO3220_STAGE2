@@ -1,6 +1,6 @@
 #pragma once
-#include <QJsonObject>
 
+#include <QJsonObject>
 #include "abstractstagefactory.h"
 
 class Game {

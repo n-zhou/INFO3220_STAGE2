@@ -18,14 +18,34 @@ protected:
 
 public:
     virtual ~Table() {}
-    Table(int width, int height, QColor colour, double friction, int xpos = 0, int ypos = 0) :
-        m_width(width), m_height(height), m_xpos(xpos), m_ypos(ypos), m_pockets(),
-        m_brush(colour), m_friction(friction) {}
+    Table(int width,
+          int height,
+          QColor colour,
+          double friction,
+          int xpos = 0,
+          int ypos = 0) :
+        m_width(width),
+        m_height(height),
+        m_xpos(xpos),
+        m_ypos(ypos),
+        m_pockets(),
+        m_brush(colour),
+        m_friction(friction) {}
 
-    Table(int width, int height, QColor colour, double friction,
-          std::vector<std::shared_ptr<Pocket>> &pockets, int xpos = 0, int ypos = 0) :
-        m_width(width), m_height(height), m_xpos(xpos), m_ypos(ypos), m_pockets(pockets),
-        m_brush(colour), m_friction(friction) {}
+    Table(int width,
+          int height,
+          QColor colour,
+          double friction,
+          std::vector<std::shared_ptr<Pocket>> &pockets,
+          int xpos = 0,
+          int ypos = 0) :
+        m_width(width),
+        m_height(height),
+        m_xpos(xpos),
+        m_ypos(ypos),
+        m_pockets(pockets),
+        m_brush(colour),
+        m_friction(friction) {}
 
     /**
      * @brief render - draw the table to screen using the specified painter

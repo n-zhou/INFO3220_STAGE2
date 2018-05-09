@@ -9,8 +9,7 @@ public:
     StageOneAdaptor(Game *game) : AbstractPlayableGame(),
         m_game(game) {}
 
-    ~StageOneAdaptor()
-    {
+    ~StageOneAdaptor() {
         delete m_game;
     }
 

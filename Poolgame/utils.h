@@ -11,6 +11,9 @@ constexpr char config_path[] = "config.json";
 constexpr int animFrameMS = 16;
 constexpr int drawFrameMS = 16;
 
+/**
+ * This namespace contains the default values used for stage 2
+ */
 namespace Default {
 
     /**

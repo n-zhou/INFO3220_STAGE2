@@ -1,5 +1,8 @@
 #include "stagetwofactory.h"
 
+#include <QJsonObject>
+#include <QVector2D>
+
 std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
 {
     std::string colour = Default::Ball::colour;

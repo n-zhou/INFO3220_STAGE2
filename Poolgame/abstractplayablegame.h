@@ -79,13 +79,24 @@ public:
     virtual void render(QPainter &painter) = 0;
 
     /**
-     * @brief animate
-     * @param dt
+     * @brief animate - applys the physics to the game based on
+     * the paramater
+     * @param dt -
      */
     virtual void animate(double dt) = 0;
 
+    /**
+     * @brief getMinimumHeight
+     * @return the minimum height required for the window
+     * to be to display the objects in the game
+     */
     virtual int getMinimumHeight() const = 0;
 
+    /**
+     * @brief getMinimumWidth
+     * @return the minimum width requried for the window
+     * to be to display the objects in the game
+     */
     virtual int getMinimumWidth() const = 0;
 
 

@@ -5,8 +5,7 @@
 #include "stagetwoplayablegame.h"
 #include "stagetwofactory.h"
 
-class StageTwoBuilder : public StageOneBuilder
-{
+class StageTwoBuilder : public StageOneBuilder {
 public:
     StageTwoBuilder() : StageOneBuilder(new StageTwoFactory()) {}
 

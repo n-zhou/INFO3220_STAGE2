@@ -3,8 +3,7 @@
 #include <QVector2D>
 #include <QPainter>
 
-class Pocket
-{
+class Pocket {
 public:
     Pocket(QVector2D pos, double radius);
 
