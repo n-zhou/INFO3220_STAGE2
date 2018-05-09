@@ -1,6 +1,9 @@
 /**
-  *     Written by James Butcher
-  *     2018/04/12
+  * Written by James Butcher
+  * 2018/04/12
+  *
+  * @author Not James Butcher
+  *
   */
 
 #include "dialog.h"

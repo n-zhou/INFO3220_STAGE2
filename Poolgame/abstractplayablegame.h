@@ -4,8 +4,28 @@
 #include <QPainter>
 #include <QKeyEvent>
 
-class AbstractPlayableGame
-{
+/**
+ * @brief The AbstractPlayableGame class represents a playable
+ * game instance of pool.
+ * <p>
+ * The mouse interactions in this class by default do nothing. The
+ * reason it does nothing by default, is to maximise compatability
+ * with stage 1. In Stage 1, there was no way to interact with the
+ * game.
+ * </p>
+ * <p>
+ * Any subclass of this class should override the methods involving the
+ * mouse and keyboard should they wish to include interaction. Should they
+ * not override those methods, the default behaviour would be to do nothing.
+ * </p>
+ *
+ * @author nzho8446
+ * @see Ball
+ * @see Table
+ * @since stage2
+ */
+
+class AbstractPlayableGame {
 public:
     AbstractPlayableGame() {}
 

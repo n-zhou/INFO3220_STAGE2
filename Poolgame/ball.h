@@ -5,6 +5,13 @@
 #include <QPainter>
 #include <QVector2D>
 
+/**
+ * @brief The Ball class represents a ball object.
+ *
+ * @author "James Butcher"
+ * @author nzho8446
+ */
+
 class Ball {
 protected:
     QBrush m_brush;
