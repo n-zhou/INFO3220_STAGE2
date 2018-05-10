@@ -49,7 +49,7 @@ public:
      * method is used to add innerballs.
      * @param ballData
      */
-    void addBalls(QJsonArray &ballArray);
+    void addBall(std::shared_ptr<Ball> ball);
 
     /**
      * @brief getBalls - this method returns a vector containing

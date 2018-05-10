@@ -39,4 +39,7 @@ public:
      * @return our newly created table
      */
     virtual std::unique_ptr<Table> makeTable(const QJsonObject& tableData) override;
+
+private:
+    std::shared_ptr<Ball> makeBall(const Ball *parentBall,const QJsonObject &ballData);
 };
