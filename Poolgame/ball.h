@@ -65,6 +65,9 @@ public:
     double getRadius() const { return m_radius; }
     QVector2D getPosition() const { return m_pos; }
     QColor getColour() const { return m_brush.color(); }
+
+    friend void draw(QPainter &painter, Ball &ball);
+
 };
 
 class StageOneBall : public Ball {

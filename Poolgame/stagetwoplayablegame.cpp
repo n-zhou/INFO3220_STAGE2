@@ -1,6 +1,7 @@
 #include "stagetwoplayablegame.h"
 #include <string>
 
+void draw(QPainter &painter, Ball &ball);
 
 StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls)
     : AbstractPlayableGame(), m_table(table.release()), m_balls(balls), m_clicked(false)
@@ -92,7 +93,12 @@ void StageTwoPlayableGame::render(QPainter &painter)
 {
     m_table->render(painter);
     for (std::shared_ptr<Ball> b : m_balls) {
-        b->render(painter);
+        if (Ball::toggle) {
+            b->render(painter);
+        } else {
+            draw(painter, *b.get());
+        }
+
     }
 
     //draws the line while the left mouse button is clicked
@@ -465,4 +471,12 @@ void StageTwoPlayableGame::hitTheWhiteBall()
 
 }
 
-
+void draw(QPainter &painter, Ball &ball)
+{
+    painter.save();
+    painter.setBrush(ball.m_brush);
+    painter.drawEllipse(ball.m_pos.toPointF(),
+                        ball.m_radius,
+                        ball.m_radius);
+    painter.restore();
+}

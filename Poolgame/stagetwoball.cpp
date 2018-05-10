@@ -16,10 +16,8 @@ void StageTwoBall::render(QPainter &painter) {
     painter.drawEllipse(m_pos.toPointF(), m_radius, m_radius);
 
     //draw the inner balls on top only if the user toggles it
-    if (Ball::toggle) {
-        for (auto b : m_balls) {
-            b.get()->render(painter);
-        }
+    for (auto b : m_balls) {
+        b.get()->render(painter);
     }
 }
 
