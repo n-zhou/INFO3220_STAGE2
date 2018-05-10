@@ -88,6 +88,8 @@ private:
 
     std::vector<std::shared_ptr<Ball>>* breakBall(Ball *ballA, Ball *ballB);
 
+    void render(QPainter &painter, Ball *ball);
+
     /**
      * @brief hitTheWhiteBall - applies the change in velocity
      * to the white ball that is a result of getting hit by the cue.

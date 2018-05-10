@@ -96,7 +96,7 @@ void StageTwoPlayableGame::render(QPainter &painter)
         if (m_toggle) {
             b->render(painter);
         } else {
-            b->render(painter, b.get());
+            this->render(painter, b.get());
         }
 
     }
@@ -378,41 +378,44 @@ void StageTwoPlayableGame::resolveCollision(Ball *ballA, Ball *ballB)
 
 bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB)
 {
-    // if not colliding (distance is larger than radii)
-    //Properties of two colliding balls,
-     //ball A
-     QVector2D posA = ballA->getPosition();
-     QVector2D velA = ballA->getVelocity();
-     float massA = ballA->getMass();
-     //and ball B
-     QVector2D posB = ballB->getPosition();
-     QVector2D velB = ballB->getVelocity();
-     float massB = ballB->getMass();
 
-     float mR = massB / massA;
 
-     QVector2D collisionVector = posB - posA;
-     collisionVector.normalize();
-     double vA = QVector2D::dotProduct(collisionVector, velA);
-     double vB = QVector2D::dotProduct(collisionVector, velB);
-     if (vA <= 0 && vB >= 0) {
+    QVector2D posA = ballA->getPosition();
+    QVector2D velA = ballA->getVelocity();
+    float massA = ballA->getMass();
+    //and ball B
+    QVector2D posB = ballB->getPosition();
+    QVector2D velB = ballB->getVelocity();
+    float massB = ballB->getMass();
+
+    float mR = massB / massA;
+
+    QVector2D collisionVector = posB - posA;
+    collisionVector.normalize();
+    double vA = QVector2D::dotProduct(collisionVector, velA);
+    double vB = QVector2D::dotProduct(collisionVector, velB);
+    if (vA <= 0 && vB >= 0) {
         return false;
-     }
-     double a = -(mR + 1);
-     double b = 2 * (mR * vB + vA);
-     double c = -((mR - 1) * vB * vB + 2 * vA * vB);
-     double discriminant = sqrt(b * b - 4 * a * c);
-     double root = (-b + discriminant)/(2 * a);
-     //only one of the roots is the solution, the other pertains to the current velocities
-     if (root - vB < 0.01) {
+    }
+    double a = -(mR + 1);
+    double b = 2 * (mR * vB + vA);
+    double c = -((mR - 1) * vB * vB + 2 * vA * vB);
+    double discriminant = sqrt(b * b - 4 * a * c);
+    double root = (-b + discriminant)/(2 * a);
+    //only one of the roots is the solution, the other pertains to the current velocities
+    if (root - vB < 0.01) {
         root = (-b - discriminant)/(2 * a);
-     }
+    }
 
 
     //The resulting changes in velocity for ball A and B
     QVector2D deltaVA = mR * (vB - root) * collisionVector;
 
     StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA);
+    //if the dynamic cast failed, ballA is not breakable
+    if (!bA) {
+        return false;
+    }
     float ballMass = bA->getMass();
     float ballStrength = bA->getStrength();
     QVector2D deltaV = deltaVA;
@@ -442,7 +445,7 @@ void StageTwoPlayableGame::hitTheWhiteBall()
     QVector2D collisionVector = posB - posA;
     collisionVector.normalize();
 
-   //the proportion of each balls velocity along the axis of collision
+    //the proportion of each balls velocity along the axis of collision
     double vA = QVector2D::dotProduct(collisionVector, velA);
     double vB = QVector2D::dotProduct(collisionVector, velB);
     //the balls are moving away from each other so do nothing
@@ -462,7 +465,7 @@ void StageTwoPlayableGame::hitTheWhiteBall()
     double root = (-b + discriminant)/(2 * a);
     //only one of the roots is the solution, the other pertains to the current velocities
     if (root - vB < 0.01) {
-      root = (-b - discriminant)/(2 * a);
+        root = (-b - discriminant)/(2 * a);
     }
 
 
@@ -471,12 +474,12 @@ void StageTwoPlayableGame::hitTheWhiteBall()
 
 }
 
-void Ball::render(QPainter &painter, Ball *ball)
+void StageTwoPlayableGame::render(QPainter &painter, Ball *ball)
 {
     painter.save();
-    painter.setBrush(ball->m_brush);
-    painter.drawEllipse(ball->m_pos.toPointF(),
-                        ball->m_radius,
-                        ball->m_radius);
+    painter.setBrush(ball->getColour());
+    painter.drawEllipse(ball->getPosition().toPointF(),
+                        ball->getRadius(),
+                        ball->getRadius());
     painter.restore();
 }

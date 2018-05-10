@@ -22,8 +22,6 @@ protected:
     int m_radius;
 public:
 
-    static bool toggle;
-
     /**
      * @brief ~Ball
      * @since Stage 1

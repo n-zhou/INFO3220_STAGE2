@@ -2,8 +2,22 @@
   * Written by James Butcher
   * 2018/04/12
   *
-  * @author Not James Butcher
+  * <p>
+  * This code has been inherited from "James Butcher" and modified
+  * for the purpose of <tt>INFO3220 Assignment 2<ttl>.
+  * </p>
   *
+  * <p>
+  * A major modification to this code base is the conversion of
+  * using raw pointers to using smart pointers. While raw pointers
+  * are still present in many methods, they are not returned from
+  * any method. This should aid the programmer with working out
+  * ownership of a pointer.
+  * </p>
+  *
+  * @author nzho8446
+  * @since Stage 1
+  * @see Cameron Hosking
   */
 
 #include "dialog.h"
@@ -28,8 +42,6 @@ QJsonObject loadConfig() {
     QJsonObject config = QJsonDocument::fromJson(content.toUtf8()).object();
     return config;
 }
-
-bool Ball::toggle = false;
 
 int main(int argc, char *argv[])
 {
