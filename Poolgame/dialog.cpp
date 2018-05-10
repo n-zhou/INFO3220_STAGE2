@@ -35,8 +35,7 @@ Dialog::Dialog(std::unique_ptr<AbstractPlayableGame> game, QWidget* parent) :
 
 }
 
-void Dialog::mousePressEvent(QMouseEvent *event)
-{
+void Dialog::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         m_game->leftClick(event);
     } else if (event->button() == Qt::RightButton) {
@@ -44,8 +43,7 @@ void Dialog::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void Dialog::mouseReleaseEvent(QMouseEvent *event)
-{
+void Dialog::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         m_game->leftClickRelease(event);
     } else if (event->button() == Qt::RightButton) {
@@ -53,18 +51,15 @@ void Dialog::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void Dialog::mouseMoveEvent(QMouseEvent *event)
-{
+void Dialog::mouseMoveEvent(QMouseEvent *event) {
     m_game->mouseDrag(event);
 }
 
-void Dialog::keyPressEvent(QKeyEvent *event)
-{
+void Dialog::keyPressEvent(QKeyEvent *event) {
     m_game->keyPressEvent(event);
 }
 
-Dialog::~Dialog()
-{
+Dialog::~Dialog() {
     delete aTimer;
     delete dTimer;
     delete ui;

@@ -2,6 +2,7 @@
 
 #include <QJsonObject>
 #include <QVector2D>
+#include "stagetwopocket.h"
 
 std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
 {
@@ -168,7 +169,7 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData)
                 int pX = position["x"].toDouble();
                 int pY = position["y"].toDouble();
 
-                pockets.push_back(std::make_shared<Pocket>(Pocket(QVector2D(pX, pY), radius)));
+                pockets.push_back(std::make_shared<StageTwoPocket>(StageTwoPocket(QVector2D(pX, pY), radius)));
             } else {
                 std::cerr << "missing pocket data, pocket ignored." << std::endl;
             }

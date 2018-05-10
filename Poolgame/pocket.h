@@ -11,14 +11,15 @@
  */
 class Pocket {
 public:
-    Pocket(QVector2D pos, double radius);
+    Pocket(QVector2D pos, double radius) :
+        m_pos(pos), m_radius(radius) {}
 
-    virtual ~Pocket();
+    virtual ~Pocket() {}
 
-    virtual void render(QPainter& painter);
+    virtual void render(QPainter& painter) = 0;
 
-    virtual QVector2D getPos();
-    virtual double getRadius();
+    virtual QVector2D getPos() { return m_pos; }
+    virtual double getRadius() { return m_radius; }
 
 protected:
     QVector2D m_pos;

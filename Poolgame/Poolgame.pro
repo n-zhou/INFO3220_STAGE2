@@ -33,11 +33,11 @@ SOURCES += \
     gamebuilder.cpp \
     stagetwofactory.cpp \
     stagetwoball.cpp \
-    pocket.cpp \
     stagetwotable.cpp \
     stageoneadaptor.cpp \
     stagetwoplayablegame.cpp \
-    stagetwobuilder.cpp
+    stagetwobuilder.cpp \
+    stagetwopocket.cpp
 
 HEADERS += \
         dialog.h \
@@ -55,7 +55,8 @@ HEADERS += \
     stagetwotable.h \
     stageoneadaptor.h \
     stagetwoplayablegame.h \
-    stagetwobuilder.h
+    stagetwobuilder.h \
+    stagetwopocket.h
 
 FORMS += \
         dialog.ui

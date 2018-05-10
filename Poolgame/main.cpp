@@ -43,8 +43,7 @@ QJsonObject loadConfig() {
     return config;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QJsonObject conf = loadConfig();
     bool stage2 = (!conf.contains("stage2") || !conf["stage2"].toBool()) ? false : true;
     // create our gambased on our config
