@@ -26,13 +26,7 @@ StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::v
 void StageTwoPlayableGame::rightClick(QMouseEvent *e)
 {
     //toggles the visibility of the inner balls on
-    m_toggle = true;
-}
-
-void StageTwoPlayableGame::rightClickRelease(QMouseEvent *e)
-{
-    //toggles the visiblity of the inner balls off
-    m_toggle = false;
+    m_toggle = !m_toggle;
 }
 
 void StageTwoPlayableGame::leftClick(QMouseEvent *e)
@@ -256,6 +250,11 @@ std::vector<std::shared_ptr<Ball>>* StageTwoPlayableGame::breakBall(Ball *ballA,
     QVector2D deltaVB = (root - vB) * collisionVector;
 
     StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA);
+
+    //dynamic cast failed, hence ballA cannot be broken
+    if (!bA) {
+        //return std::vector<std::shared_ptr<Ball>>();
+    }
     std::vector<std::shared_ptr<Ball>> *children = bA->getBalls();
     float ballMass = bA->getMass();
     float ballStrength = bA->getStrength();

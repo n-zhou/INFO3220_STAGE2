@@ -4,8 +4,15 @@
 #include "abstractstagefactory.h"
 
 /**
- * @brief The Game class
+ * @brief The Game class represents a stage 1 game.
+ *
+ * <p>
+ * This class has been modified from holding raw pointers to holding
+ * smart pointers. This makes memory management automated.
+ * </p>
+ *
  * @author "James Butcher"
+ * @author nzho8446
  * @since Stage 1
  */
 class Game {
@@ -38,12 +45,12 @@ public:
      * @param table - the table to be bounds checked
      * @param ball - the ball to move
      */
-    static void resolveCollision(const Table* table, Ball* ball);
+    void resolveCollision(const Table* table, Ball* ball);
 
     /**
      * @brief resolveCollision - resolve both ball's velocity whether these balls collide
      * @param ballA - first ball
      * @param ballB - second ball
      */
-     static void resolveCollision(Ball* ballA, Ball* ballB);
+     void resolveCollision(Ball* ballA, Ball* ballB);
 };

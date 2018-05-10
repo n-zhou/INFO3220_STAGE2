@@ -71,9 +71,10 @@ public:
     virtual void leftClickRelease(QMouseEvent *e) {}
 
     /**
-     * @brief mouseDrag - this method is called whenever the user drags their
-     * mouse while holding left click. Subclassses are recommended to override
-     * this default behaviour.
+     * @brief mouseDrag - this method is called whenever the user moves
+     * the mouse around.
+     *
+     * @param e - The QMouseEvent associated with moving the mouse.
      */
     virtual void mouseDrag(QMouseEvent *e) {}
 

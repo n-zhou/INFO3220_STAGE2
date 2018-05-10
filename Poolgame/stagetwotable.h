@@ -7,8 +7,8 @@
  * @brief The StageTwoTable class
  *
  * @author nzho8446
- * @since Stage 2
  * @see Table
+ * @since Stage 2
  */
 
 class StageTwoTable : public Table {
@@ -17,7 +17,7 @@ public:
                    std::vector<std::shared_ptr<Pocket>> &pockets)
         : Table(width, height, colour, friction, pockets){}
 
-    void render(QPainter& painter);
+    void render(QPainter& painter) override;
 protected:
 
 };

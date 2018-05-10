@@ -8,27 +8,35 @@
 #include "stagetwoball.h"
 
 /**
- * @brief The StageTwoFactory class
+ * @brief The StageTwoFactory class creates objects for an
+ * amazing pool game.
+ *
+ * <p>
+ *
+ * </p>
  *
  * @author nzho8446
- * @since Stage 2
  * @see AbstractStageFactory
+ * @see StageTwoBall
+ * @see StageTwoTable
+ * @since Stage 2
  */
+
 class StageTwoFactory : public AbstractStageFactory {
 
 public:
 
     /**
-     * @brief makeBall - construct a ball based on json
-     * @param ballData - our json data for this table
-     * @return
+     * @brief makeBall - construct a ball based on the json provided
+     * @param ballData - json that conforms to the spec
+     * @return our newly created ball
      */
     virtual std::shared_ptr<Ball> makeBall(const QJsonObject& ballData) override;
 
     /**
-     * @brief makeTable - construct a table based on json
-     * @param tableData - our json data for this table
-     * @return
+     * @brief makeTable - construct a table based on json provided
+     * @param tableData - json that conforms to the spec
+     * @return our newly created table
      */
     virtual std::unique_ptr<Table> makeTable(const QJsonObject& tableData) override;
 };

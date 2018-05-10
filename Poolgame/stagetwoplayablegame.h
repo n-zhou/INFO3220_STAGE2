@@ -11,7 +11,13 @@
 #include <algorithm>
 
 /**
- * @brief The StageTwoPlayableGame class
+ * @brief The StageTwoPlayableGame class is the Stage 2 implementation
+ * of the {@code AbstractPlayableGame}. It overrides most of the optional
+ * mouse events and implements all of the pure virtual methods.
+ *
+ * <p>
+ *
+ * </p>
  *
  * @author nzho8446
  * @see AbstractPlayableGame
@@ -22,55 +28,81 @@ class StageTwoPlayableGame : public AbstractPlayableGame {
 public:
     StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls);
 
-    ~StageTwoPlayableGame() {}
+    virtual ~StageTwoPlayableGame() {}
 
-    void rightClick(QMouseEvent *e);
+    /**
+     * @brief rightClick - this method should be called whenever
+     * a there is a rightclick mouse event. The Default behaviour
+     * of this method is to ignore it so it is recommended that subclasses
+     * override this behaviour.
+     *
+     * @param e - The QMouseEvent associated with the rightclick
+     */
+    virtual void rightClick(QMouseEvent *e) override;
 
-    void rightClickRelease(QMouseEvent *e);
+    /**
+     * @brief leftClick - this method should be called whenever
+     * a there is a leftclick mouse event. The Default behaviour
+     * of this method is to ignore it so it is recommended that subclasses
+     * override this behaviour.
+     *
+     * @param e - The QMouseEvent associated with releasing the left click
+     */
+    virtual void leftClick(QMouseEvent *e) override;
 
-    void leftClick(QMouseEvent *e);
+    /**
+     * @brief leftClickRelease - this method is called whenever the
+     * left mouse button is released.
+     *
+     * @param e - The QMouseEvent associated with the releasing the
+     * leftclick.
+     */
+    virtual void leftClickRelease(QMouseEvent *e) override;
 
-    void leftClickRelease(QMouseEvent *e);
-
-    void mouseDrag(QMouseEvent *e);
+    /**
+     * @brief mouseDrag - this method is called whenever the user moves
+     * the mouse around.
+     *
+     * @param e - The QMouseEvent associated with moving the mouse.
+     */
+    virtual void mouseDrag(QMouseEvent *e) override;
 
     /**
      * @brief keyPressEvent
      * @param event - the QKeyEvent associated with the keypress
      */
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
 
     /**
      * @brief render - Draws the game onto the screen
      * @param painter - QPainter used to draw the objects with
      */
-    void render(QPainter &painter);
+    virtual void render(QPainter &painter) override;
 
     /**
      * @brief animate
      * @param dt
      */
-    void animate(double dt);
+    virtual void animate(double dt) override;
 
     /**
      * @brief getMinimumHeight
      * @return the minimum height required for the window
      * to be to display the objects in the game
      */
-    int getMinimumHeight() const;
+    virtual int getMinimumHeight() const  override;
 
     /**
      * @brief getMinimumWidth
      * @return the minimum width requried for the window
      * to be to display the objects in the game
      */
-    int getMinimumWidth() const;
+    virtual int getMinimumWidth() const  override;
 
-    friend void Ball::render(QPainter &painter, Ball *b);
-
-private:
+protected:
     std::unique_ptr<Table> m_table;
     std::vector<std::shared_ptr<Ball>> m_balls;
+private:
     bool m_clicked;
     std::weak_ptr<Ball> m_whiteBall;
     QVector2D m_mousePos;

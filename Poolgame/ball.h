@@ -8,6 +8,12 @@
 /**
  * @brief The Ball class represents a ball object.
  *
+ * <p>
+ * Perhaps, the most significant change is adding virtual to the
+ * getMass() method. Besides that, there are some slight changes
+ * to indenting, this class remains unchanged from stage 1.
+ * </p>
+ *
  * @author "James Butcher"
  * @author nzho8446
  * @since Stage 1
@@ -83,15 +89,14 @@ public:
 
     void render(QPainter &painter, Ball *b);
 
-    /**
-     * @brief draw
-     * @param painter
-     * @param ball
-     * @since Stage 2
-     */
-    friend void draw(QPainter &painter, Ball *ball);
-
 };
+
+/**
+ * @brief The StageOneBall class implements the Ball interface.
+ *
+ * @author "James Butcher"
+ * @since Stage 1
+ */
 
 class StageOneBall : public Ball {
 public:

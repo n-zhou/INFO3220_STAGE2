@@ -42,6 +42,10 @@ protected:
      */
     void mouseMoveEvent(QMouseEvent *event);
 
+    /**
+     * @brief keyPressEvent - called whenever the user hits a key
+     * @param event - the QKeyEvent associated with the keypress
+     */
     void keyPressEvent(QKeyEvent *event);
 public slots:
     /**

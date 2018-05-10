@@ -11,6 +11,7 @@
  * @author nzho8446
  * @see StageOneBuilder
  * @see GameBuilder
+ * @since Stage 1
  */
 class StageTwoBuilder : public StageOneBuilder {
 public:

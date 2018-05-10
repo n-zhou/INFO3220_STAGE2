@@ -13,6 +13,8 @@
  *
  * @author nzho8446
  * @see Ball
+ * @see StageOneBall
+ * @since Stage 2
  */
 class StageTwoBall : public Ball {
 public:

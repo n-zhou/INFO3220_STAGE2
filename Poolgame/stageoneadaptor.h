@@ -25,13 +25,13 @@ public:
         delete m_game;
     }
 
-    void render(QPainter &painter);
+    void render(QPainter &painter) override;
 
-    void animate(double dt);
+    void animate(double dt) override;
 
-    int getMinimumHeight() const;
+    int getMinimumHeight() const override;
 
-    int getMinimumWidth() const;
+    int getMinimumWidth() const override;
 
 private:
     Game *m_game;
