@@ -76,9 +76,14 @@ void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event)
             std::cout << "Can't stop the white ball when it's pocketed :(" << std::endl;
         }
     }
+    //we'll place a new white ball in the game just because the user pressed control
     if (event->key() == Qt::Key_Control) {
-        m_balls.push_back(std::shared_ptr<Ball>(new StageTwoBall(QColor("white"), QVector2D(100, 100),
-                                                                 QVector2D(0, 0), Default::Ball::mass, 10, Default::Ball::strength)));
+        m_balls.push_back(std::shared_ptr<Ball>(new StageTwoBall(QColor("white"),
+                                                                 QVector2D(100, 100),
+                                                                 QVector2D(0, 0),
+                                                                 Default::Ball::mass,
+                                                                 Default::Ball::radius,
+                                                                 Default::Ball::strength)));
         m_whiteBall = m_balls.back();
     }
 }
@@ -87,9 +92,12 @@ void StageTwoPlayableGame::render(QPainter &painter)
 {
     m_table->render(painter);
     for (std::shared_ptr<Ball> b : m_balls) {
+        //we check if the visibility of the children balls is toggled on
         if (m_toggle) {
+            //the parent balls will draw themselves, and then recursively draw their children
             b->render(painter);
         } else {
+            //else we draw the parent ball only
             this->render(painter, b.get());
         }
 
@@ -134,25 +142,31 @@ void StageTwoPlayableGame::animate(double dt){
 
     for (int i = 0; i < m_balls.size(); ++i) {
         std::shared_ptr<Ball> ballA = m_balls.at(i);
+
         for (int j = i + 1; j < m_balls.size(); ++j) {
+
             std::shared_ptr<Ball> ballB = m_balls.at(j);
             if (isCollision(ballA.get(), ballB.get())) {
+
                 if (isBreakable(ballA.get(), ballB.get()) && isBreakable(ballB.get(), ballB.get())) {
-                    std::vector<std::shared_ptr<Ball>> *copy1 = breakBall(ballA.get(), ballB.get());
-                    std::vector<std::shared_ptr<Ball>> *copy2 = breakBall(ballB.get(), ballA.get());
-                    oddChildren.insert(oddChildren.end(), copy1->begin(), copy1->end());
-                    oddChildren.insert(oddChildren.end(), copy2->begin(), copy2->end());
+
+                    std::vector<std::shared_ptr<Ball>> copy1 = breakBall(ballA.get(), ballB.get());
+                    std::vector<std::shared_ptr<Ball>> copy2 = breakBall(ballB.get(), ballA.get());
+                    oddChildren.insert(oddChildren.end(), copy1.begin(), copy1.end());
+                    oddChildren.insert(oddChildren.end(), copy2.begin(), copy2.end());
                     m_balls.erase(m_balls.begin() + j);
                     m_balls.erase(m_balls.begin() + i--);
                     break;
                 } else if (isBreakable(ballA.get(), ballB.get())) {
-                    std::vector<std::shared_ptr<Ball>> *copy = breakBall(ballA.get(), ballB.get());
-                    oddChildren.insert(oddChildren.end(), copy->begin(), copy->end());
+
+                    std::vector<std::shared_ptr<Ball>> copy = breakBall(ballA.get(), ballB.get());
+                    oddChildren.insert(oddChildren.end(), copy.begin(), copy.end());
                     m_balls.erase(m_balls.begin() + i--);
                     break;
                 } else if (isBreakable(ballB.get(), ballA.get())) {
-                    std::vector<std::shared_ptr<Ball>> *copy = breakBall(ballB.get(), ballA.get());
-                    oddChildren.insert(oddChildren.end(), copy->begin(), copy->end());
+
+                    std::vector<std::shared_ptr<Ball>> copy = breakBall(ballB.get(), ballA.get());
+                    oddChildren.insert(oddChildren.end(), copy.begin(), copy.end());
                     m_balls.erase(m_balls.begin() + j--);
                 }
             }
@@ -201,11 +215,9 @@ void StageTwoPlayableGame::animate(double dt){
 
 }
 
-std::vector<std::shared_ptr<Ball>>* StageTwoPlayableGame::breakBall(Ball *ballA, Ball *ballB)
+std::vector<std::shared_ptr<Ball>> StageTwoPlayableGame::breakBall(Ball *ballA, Ball *ballB)
 {
-    // if not colliding (distance is larger than radii)
-    //Properties of two colliding balls,
-     //ball A
+
      QVector2D posA = ballA->getPosition();
      QVector2D velA = ballA->getVelocity();
      float massA = ballA->getMass();
@@ -255,19 +267,19 @@ std::vector<std::shared_ptr<Ball>>* StageTwoPlayableGame::breakBall(Ball *ballA,
     if (!bA) {
         //return std::vector<std::shared_ptr<Ball>>();
     }
-    std::vector<std::shared_ptr<Ball>> *children = bA->getBalls();
+    std::vector<std::shared_ptr<Ball>> children = bA->getBalls();
     float ballMass = bA->getMass();
     float ballStrength = bA->getStrength();
     float ballRadius = bA->getRadius();
     QVector2D preCollisionVelocity = ballA->getVelocity();
     QVector2D deltaV = deltaVA;
     float energyOfCollision = ballMass*deltaV.lengthSquared();
-    float energyPerBall = energyOfCollision/children->size();
+    float energyPerBall = energyOfCollision/children.size();
     QVector2D pointOfCollision((-deltaV.normalized())*ballRadius);
 
     //for each component ball
-    for (int i = 0; i < children->size(); ++i) {
-        std::shared_ptr<Ball> child = children->at(i);
+    for (int i = 0; i < children.size(); ++i) {
+        std::shared_ptr<Ball> child = children.at(i);
         QVector2D componentBallVelocity = preCollisionVelocity + sqrt(energyPerBall/child.get()->getMass())*(child.get()->getPosition()-pointOfCollision).normalized();
         child.get()->multiplyVelocity(QVector2D(0, 0));
         child.get()->changeVelocity(componentBallVelocity);
@@ -435,7 +447,7 @@ void StageTwoPlayableGame::hitTheWhiteBall()
     QVector2D velA = m_whiteBall.lock()->getVelocity();
     //and ball B is actually the cue lol
     QVector2D posB = m_mousePos;
-    QVector2D velB = (posA - posB) / 3;
+    QVector2D velB = (posA - posB) / 1.2;
 
     //calculate their mass ratio
     float mR = 1;

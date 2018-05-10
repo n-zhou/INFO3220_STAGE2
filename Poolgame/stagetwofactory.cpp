@@ -3,6 +3,7 @@
 #include <QJsonObject>
 #include <QVector2D>
 #include "stagetwopocket.h"
+#include <cassert>
 
 std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
 {
@@ -84,10 +85,22 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
         std::cerr << "ball velocity not provided" << std::endl;
     }
 
-    std::shared_ptr<StageTwoBall> ret = std::shared_ptr<StageTwoBall>(new StageTwoBall(QColor(colour.c_str()), QVector2D(xpos, ypos), QVector2D(xvel, yvel), mass, radius, strength));
+    std::shared_ptr<StageTwoBall> ret = std::shared_ptr<StageTwoBall>(
+                new StageTwoBall(QColor(colour.c_str()),
+                                 QVector2D(xpos, ypos),
+                                 QVector2D(xvel, yvel),
+                                 mass,
+                                 radius,
+                                 strength));
     QJsonArray ballArray = ballData["balls"].toArray();
     for (int i = 0; i < ballArray.size(); ++i) {
         ret->addBall(makeBall(ret.get(), ballArray[i].toObject()));
+        std::vector<std::shared_ptr<Ball>> &children = ret->getBalls();
+        std::shared_ptr<Ball> lastBall = children.back();
+        if (ret->getPosition().distanceToPoint(lastBall->getPosition()) + lastBall->getRadius() > ret->getRadius()) {
+            children.erase(children.end()-1, children.end());
+            std::cout << children.size() << std::endl;
+        }
     }
     return ret;
 }
@@ -189,46 +202,39 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
     double radius = Default::Ball::radius;
     double strength = Default::Ball::strength;
 
-    //check for ball colour
     if (ballData.contains("colour")) {
         colour = ballData["colour"].toString().toStdString();
     } else {
         std::cerr << "missing ball colour" << std::endl;
     }
 
-    //check for ball mass
     if (ballData.contains("mass")) {
         mass = ballData["mass"].toDouble();
     } else {
         std::cerr << "missing ball mass" << std::endl;
     }
 
-    //check for ball strength
     if (ballData.contains("strength")) {
         strength = ballData["strength"].toDouble();
     } else {
         std::cerr << "missing ball strength" << std::endl;
     }
 
-    //check for ball radius
     if (ballData.contains("radius")) {
         radius = ballData["radius"].toDouble();
     } else {
         std::cerr << "ball radius missing" << std::endl;
     }
 
-    //check the ball position
     if (ballData.contains("position")) {
         QJsonObject ballPosition = ballData["position"].toObject();
 
-        //check the ball's x position
         if (ballPosition.contains("x")) {
             pos.setX(ballPosition["x"].toDouble());
         } else {
             std::cerr << "missing ball x position" << std::endl;
         }
 
-        //check the ball's y position
         if (ballPosition.contains("y")) {
             pos.setY(ballPosition["y"].toDouble());
         } else {
@@ -241,14 +247,12 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
     if (ballData.contains("velocity")) {
         QJsonObject ballVelocity = ballData["velocity"].toObject();
 
-        //check the ball's x position
         if (ballVelocity.contains("x")) {
             vel.setX(ballVelocity["x"].toDouble());
         } else {
             std::cerr << "missing ball x velocity" << std::endl;
         }
 
-        //check the ball's y position
         if (ballVelocity.contains("y")) {
             vel.setY(ballVelocity["y"].toDouble());
         } else {
@@ -259,10 +263,24 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
     }
 
     pos += parentBall->getPosition();
-    std::shared_ptr<StageTwoBall> ret = std::shared_ptr<StageTwoBall>(new StageTwoBall(QColor(colour.c_str()), pos, vel, mass, radius, strength));
+    std::shared_ptr<StageTwoBall> ret = std::shared_ptr<StageTwoBall>(
+                new StageTwoBall(QColor(colour.c_str()),
+                                 pos,
+                                 vel,
+                                 mass,
+                                 radius,
+                                 strength));
+    if (parentBall->getPosition().distanceToPoint(ret->getPosition()) + ret->getRadius() > parentBall->getRadius()) {
+        return ret;
+    }
     QJsonArray ballArray = ballData["balls"].toArray();
     for (int i = 0; i < ballArray.size(); ++i) {
         ret->addBall(this->makeBall(ret.get(), ballArray[i].toObject()));
+        std::vector<std::shared_ptr<Ball>> &children = ret->getBalls();
+        std::shared_ptr<Ball> lastBall = children.back();
+        if (ret->getPosition().distanceToPoint(lastBall->getPosition()) + lastBall->getRadius() > ret->getRadius()) {
+            children.erase(children.end()-1, children.end());
+        }
     }
     return ret;
 }

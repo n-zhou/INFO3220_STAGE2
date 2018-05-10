@@ -58,6 +58,5 @@ int main(int argc, char *argv[]) {
     if (stage2)
         w.setFixedSize(w.size());
     w.show();
-
     return a.exec();
 }

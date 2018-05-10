@@ -11,6 +11,10 @@
  * smart pointers. This makes memory management automated.
  * </p>
  *
+ * <p>
+ * The use of this
+ * </p>
+ *
  * @author "James Butcher"
  * @author nzho8446
  * @since Stage 1
@@ -33,6 +37,7 @@ public:
      * @brief Updates the positions of all objects within, based on how much time has changed
      * @param dt - time elapsed since last frame in seconds
      */
+    [[deprecated("This method does not implement pixels per seconds properly")]]
     void animate(double dt);
 
     /* how large the window's width should at least be */

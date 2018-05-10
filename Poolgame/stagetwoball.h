@@ -56,7 +56,7 @@ public:
      * the balls inside this ball.
      * @return the vector containing the inner balls of this ball.
      */
-    std::vector<std::shared_ptr<Ball>>* getBalls();
+    std::vector<std::shared_ptr<Ball> > &getBalls();
 
     double getMass();
     double getStrength() const;

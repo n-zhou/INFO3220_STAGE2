@@ -118,7 +118,7 @@ private:
 
     void resolveCollision(Ball *ballA, Ball *ballB);
 
-    std::vector<std::shared_ptr<Ball>>* breakBall(Ball *ballA, Ball *ballB);
+    std::vector<std::shared_ptr<Ball>> breakBall(Ball *ballA, Ball *ballB);
 
     void render(QPainter &painter, Ball *ball);
 

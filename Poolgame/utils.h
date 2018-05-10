@@ -8,7 +8,7 @@
 constexpr char config_path[] = "config.json";
 
 
-constexpr int animFrameMS = 16;
+constexpr int animFrameMS = 4;
 constexpr int drawFrameMS = 16;
 
 /**

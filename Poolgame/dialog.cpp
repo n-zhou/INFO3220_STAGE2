@@ -70,7 +70,7 @@ void Dialog::tryRender() {
 }
 
 void Dialog::nextAnim() {
-    m_game->animate(1.0/(double)animFrameMS);
+    m_game->animate(animFrameMS/1000.0);
 }
 
 void Dialog::paintEvent(QPaintEvent *)
