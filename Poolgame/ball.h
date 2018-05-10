@@ -24,7 +24,20 @@ public:
 
     static bool toggle;
 
+    /**
+     * @brief ~Ball
+     * @since Stage 1
+     */
     virtual ~Ball() {}
+
+    /**
+     * @brief Ball
+     * @param colour
+     * @param position
+     * @param velocity
+     * @param mass
+     * @param radius
+     */
     Ball(QColor colour,
          QVector2D position,
          QVector2D velocity,
@@ -48,6 +61,10 @@ public:
      */
     virtual void translate(QVector2D vec) = 0;
 
+    /**
+     * @brief getVelocity
+     * @return
+     */
     QVector2D getVelocity() const { return m_velocity; }
 
     /**
@@ -66,7 +83,15 @@ public:
     QVector2D getPosition() const { return m_pos; }
     QColor getColour() const { return m_brush.color(); }
 
-    friend void draw(QPainter &painter, Ball &ball);
+    void render(QPainter &painter, Ball *b);
+
+    /**
+     * @brief draw
+     * @param painter
+     * @param ball
+     * @since Stage 2
+     */
+    friend void draw(QPainter &painter, Ball *ball);
 
 };
 

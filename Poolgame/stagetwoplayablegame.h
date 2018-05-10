@@ -66,12 +66,15 @@ public:
      */
     int getMinimumWidth() const;
 
+    friend void Ball::render(QPainter &painter, Ball *b);
+
 private:
     std::unique_ptr<Table> m_table;
     std::vector<std::shared_ptr<Ball>> m_balls;
     bool m_clicked;
     std::weak_ptr<Ball> m_whiteBall;
     QVector2D m_mousePos;
+    bool m_toggle;
 
     bool isCollision(const Table *table, const Ball *b) const;
 

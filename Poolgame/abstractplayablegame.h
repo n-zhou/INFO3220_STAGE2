@@ -7,12 +7,14 @@
 /**
  * @brief The AbstractPlayableGame class represents a playable
  * game instance of pool.
+ *
  * <p>
  * The mouse interactions in this class by default do nothing. The
  * reason it does nothing by default, is to maximise compatability
  * with stage 1. In Stage 1, there was no way to interact with the
  * game.
  * </p>
+ *
  * <p>
  * Any subclass of this class should override the methods involving the
  * mouse and keyboard should they wish to include interaction. Should they

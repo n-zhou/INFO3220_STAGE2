@@ -4,7 +4,8 @@
 #include <QPainter>
 
 /**
- * @brief The Pocket class
+ * @brief The Pocket class represents a pocket in a
+ * pool game.
  * @author nzho8446
  * @since Stage 2
  */

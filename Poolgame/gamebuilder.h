@@ -8,6 +8,7 @@
  * @brief The GameBuilder class
  *
  * @since Stage 1
+ * @see AbstractFactory
  */
 class GameBuilder {
 protected:

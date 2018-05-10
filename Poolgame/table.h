@@ -61,15 +61,31 @@ public:
      */
     virtual void render(QPainter& painter) = 0;
 
+    /**
+     * @brief addPocket
+     * @param pocket
+     * @since Stage 2
+     */
     void addPocket(std::shared_ptr<Pocket> pocket) { m_pockets.push_back(std::move(pocket)); }
     int getWidth() const { return m_width; }
     int getHeight() const { return m_height; }
     int getX() const { return m_xpos; }
     int getY() const { return m_ypos; }
     double getFriction() const { return m_friction; }
+
+    /**
+     * @brief getPockets
+     * @return
+     * @since Stage 2
+     */
     const std::vector<std::shared_ptr<Pocket>>* getPockets() const { return &m_pockets; }
 };
 
+/**
+ * @brief The StageOneTable class
+ * @author "James Butcher"
+ * @since Stage 1
+ */
 class StageOneTable : public Table
 {
 public:

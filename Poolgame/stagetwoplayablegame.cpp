@@ -4,7 +4,7 @@
 void draw(QPainter &painter, Ball &ball);
 
 StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls)
-    : AbstractPlayableGame(), m_table(table.release()), m_balls(balls), m_clicked(false)
+    : AbstractPlayableGame(), m_table(table.release()), m_balls(balls), m_clicked(false), m_toggle(false)
 {
     //set the white ball
     for (auto b : m_balls) {
@@ -26,13 +26,13 @@ StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::v
 void StageTwoPlayableGame::rightClick(QMouseEvent *e)
 {
     //toggles the visibility of the inner balls on
-    Ball::toggle = true;
+    m_toggle = true;
 }
 
 void StageTwoPlayableGame::rightClickRelease(QMouseEvent *e)
 {
     //toggles the visiblity of the inner balls off
-    Ball::toggle = false;
+    m_toggle = false;
 }
 
 void StageTwoPlayableGame::leftClick(QMouseEvent *e)
@@ -84,7 +84,7 @@ void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event)
     }
     if (event->key() == Qt::Key_Control) {
         m_balls.push_back(std::shared_ptr<Ball>(new StageTwoBall(QColor("white"), QVector2D(100, 100),
-                                                                 QVector2D(0, 0), 100, 10, Default::Ball::strength)));
+                                                                 QVector2D(0, 0), Default::Ball::mass, 10, Default::Ball::strength)));
         m_whiteBall = m_balls.back();
     }
 }
@@ -93,10 +93,10 @@ void StageTwoPlayableGame::render(QPainter &painter)
 {
     m_table->render(painter);
     for (std::shared_ptr<Ball> b : m_balls) {
-        if (Ball::toggle) {
+        if (m_toggle) {
             b->render(painter);
         } else {
-            draw(painter, *b.get());
+            b->render(painter, b.get());
         }
 
     }
@@ -196,7 +196,7 @@ void StageTwoPlayableGame::animate(double dt){
         ballA->changeVelocity(-ballA->getVelocity() * m_table->getFriction() * dt);
     }
 
-    //update the white ball
+    //update the white ball if there still is one
     if (!m_whiteBall.expired()) {
         QVector2D vel = m_whiteBall.lock()->getVelocity();
         //if the ball moved during aiming, it will remove control from the player
@@ -471,12 +471,12 @@ void StageTwoPlayableGame::hitTheWhiteBall()
 
 }
 
-void draw(QPainter &painter, Ball &ball)
+void Ball::render(QPainter &painter, Ball *ball)
 {
     painter.save();
-    painter.setBrush(ball.m_brush);
-    painter.drawEllipse(ball.m_pos.toPointF(),
-                        ball.m_radius,
-                        ball.m_radius);
+    painter.setBrush(ball->m_brush);
+    painter.drawEllipse(ball->m_pos.toPointF(),
+                        ball->m_radius,
+                        ball->m_radius);
     painter.restore();
 }
