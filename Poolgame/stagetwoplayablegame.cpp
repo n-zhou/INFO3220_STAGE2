@@ -23,14 +23,12 @@ StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::v
     }
 }
 
-void StageTwoPlayableGame::rightClick(QMouseEvent *e)
-{
+void StageTwoPlayableGame::rightClick(QMouseEvent *e) {
     //toggles the visibility of the inner balls on
     m_toggle = !m_toggle;
 }
 
-void StageTwoPlayableGame::leftClick(QMouseEvent *e)
-{
+void StageTwoPlayableGame::leftClick(QMouseEvent *e) {
     if (m_whiteBall.expired()) {
         return;
     }
@@ -47,8 +45,7 @@ void StageTwoPlayableGame::leftClick(QMouseEvent *e)
     }
 }
 
-void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e)
-{
+void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e) {
     if (m_clicked && !m_whiteBall.expired()) {
         m_mousePos.setX(e->x());
         m_mousePos.setY(e->y());
@@ -57,16 +54,14 @@ void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e)
     }
 }
 
-void StageTwoPlayableGame::mouseDrag(QMouseEvent *e)
-{
+void StageTwoPlayableGame::mouseDrag(QMouseEvent *e) {
     if (m_clicked && !m_whiteBall.expired()) {
         m_mousePos.setX(e->x());
         m_mousePos.setY(e->y());
     }
 }
 
-void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event)
-{
+void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event) {
     std::string key = event->text().toStdString();
     if (key == "s" || key == "S") {
         if (!m_whiteBall.expired()) {
@@ -88,9 +83,9 @@ void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void StageTwoPlayableGame::render(QPainter &painter)
-{
+void StageTwoPlayableGame::render(QPainter &painter) {
     m_table->render(painter);
+
     for (std::shared_ptr<Ball> b : m_balls) {
         //we check if the visibility of the children balls is toggled on
         if (m_toggle) {
@@ -103,7 +98,7 @@ void StageTwoPlayableGame::render(QPainter &painter)
 
     }
 
-    //draws the line while the left mouse button is clicked
+    //draws the line while the left mouse button is clicked and aiming is on
     if (m_clicked && !m_whiteBall.expired()) {
         //thickness of the line is set to illustrate power of shot
         painter.save();
@@ -207,7 +202,7 @@ void StageTwoPlayableGame::animate(double dt){
     //update the white ball if there still is one
     if (!m_whiteBall.expired()) {
         QVector2D vel = m_whiteBall.lock()->getVelocity();
-        //if the ball moved during aiming, it will remove control from the player
+        //if the ball moved during aiming, we will remove control from the player
         if (!qFuzzyCompare(vel, QVector2D(0, 0))) {
             m_clicked = false;
         }
@@ -215,61 +210,41 @@ void StageTwoPlayableGame::animate(double dt){
 
 }
 
-std::vector<std::shared_ptr<Ball>> StageTwoPlayableGame::breakBall(Ball *ballA, Ball *ballB)
-{
+std::vector<std::shared_ptr<Ball>> StageTwoPlayableGame::breakBall(Ball *ballA, Ball *ballB) {
 
-     QVector2D posA = ballA->getPosition();
-     QVector2D velA = ballA->getVelocity();
-     float massA = ballA->getMass();
-     //and ball B
-     QVector2D posB = ballB->getPosition();
-     QVector2D velB = ballB->getVelocity();
-     float massB = ballB->getMass();
+    QVector2D posA = ballA->getPosition();
+    QVector2D velA = ballA->getVelocity();
+    float massA = ballA->getMass();
+    //and ball B
+    QVector2D posB = ballB->getPosition();
+    QVector2D velB = ballB->getVelocity();
+    float massB = ballB->getMass();
 
-     //calculate their mass ratio
-     float mR = massB / massA;
+    //calculate their mass ratio
+    float mR = massB / massA;
 
-     //calculate the axis of collision
-     QVector2D collisionVector = posB - posA;
-     collisionVector.normalize();
-
-    //the proportion of each balls velocity along the axis of collision
-     double vA = QVector2D::dotProduct(collisionVector, velA);
-     double vB = QVector2D::dotProduct(collisionVector, velB);
-     //the balls are moving away from each other so do nothing
-     if (vA <= 0 && vB >= 0) {
-        //return;
-     }
-
-     //The velocity of each ball after a collision can be found by solving the quadratic equation
-     //given by equating momentum and energy before and after the collision and finding the velocities
-     //that satisfy this
-     //-(mR+1)x^2 2*(mR*vB+vA)x -((mR-1)*vB^2+2*vA*vB)=0
-     //first we find the discriminant
-     double a = -(mR + 1);
-     double b = 2 * (mR * vB + vA);
-     double c = -((mR - 1) * vB * vB + 2 * vA * vB);
-     double discriminant = sqrt(b * b - 4 * a * c);
-     double root = (-b + discriminant)/(2 * a);
-     //only one of the roots is the solution, the other pertains to the current velocities
-     if (root - vB < 0.01) {
+    QVector2D collisionVector = posB - posA;
+    collisionVector.normalize();
+    double vA = QVector2D::dotProduct(collisionVector, velA);
+    double vB = QVector2D::dotProduct(collisionVector, velB);
+    double a = -(mR + 1);
+    double b = 2 * (mR * vB + vA);
+    double c = -((mR - 1) * vB * vB + 2 * vA * vB);
+    double discriminant = sqrt(b * b - 4 * a * c);
+    double root = (-b + discriminant)/(2 * a);
+    if (root - vB < 0.01) {
         root = (-b - discriminant)/(2 * a);
-     }
-
-
-    //The resulting changes in velocity for ball A and B
+    }
     QVector2D deltaVA = mR * (vB - root) * collisionVector;
-    QVector2D deltaVB = (root - vB) * collisionVector;
 
     StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA);
 
     //dynamic cast failed, hence ballA cannot be broken
     if (!bA) {
-        //return std::vector<std::shared_ptr<Ball>>();
+        return std::vector<std::shared_ptr<Ball>>();
     }
     std::vector<std::shared_ptr<Ball>> children = bA->getBalls();
     float ballMass = bA->getMass();
-    float ballStrength = bA->getStrength();
     float ballRadius = bA->getRadius();
     QVector2D preCollisionVelocity = ballA->getVelocity();
     QVector2D deltaV = deltaVA;
@@ -334,77 +309,53 @@ void StageTwoPlayableGame::resolveCollision(Table *table, Ball *ball)
     ball->multiplyVelocity(vChange);
 }
 
-void StageTwoPlayableGame::resolveCollision(Ball *ballA, Ball *ballB)
-{
-    // if not colliding (distance is larger than radii)
-    //Properties of two colliding balls,
-     //ball A
-     QVector2D posA = ballA->getPosition();
-     QVector2D velA = ballA->getVelocity();
-     float massA = ballA->getMass();
-     //and ball B
-     QVector2D posB = ballB->getPosition();
-     QVector2D velB = ballB->getVelocity();
-     float massB = ballB->getMass();
-
-     //calculate their mass ratio
-     float mR = massB / massA;
-
-     //calculate the axis of collision
-     QVector2D collisionVector = posB - posA;
-     collisionVector.normalize();
-
-    //the proportion of each balls velocity along the axis of collision
-     double vA = QVector2D::dotProduct(collisionVector, velA);
-     double vB = QVector2D::dotProduct(collisionVector, velB);
-     //the balls are moving away from each other so do nothing
-     if (vA <= 0 && vB >= 0) {
-        return;
-     }
-
-     //The velocity of each ball after a collision can be found by solving the quadratic equation
-     //given by equating momentum and energy before and after the collision and finding the velocities
-     //that satisfy this
-     //-(mR+1)x^2 2*(mR*vB+vA)x -((mR-1)*vB^2+2*vA*vB)=0
-     //first we find the discriminant
-     double a = -(mR + 1);
-     double b = 2 * (mR * vB + vA);
-     double c = -((mR - 1) * vB * vB + 2 * vA * vB);
-     double discriminant = sqrt(b * b - 4 * a * c);
-     double root = (-b + discriminant)/(2 * a);
-     //only one of the roots is the solution, the other pertains to the current velocities
-     if (root - vB < 0.01) {
-        root = (-b - discriminant)/(2 * a);
-     }
-
-
-    //The resulting changes in velocity for ball A and B
-    QVector2D deltaVA = mR * (vB - root) * collisionVector;
-    QVector2D deltaVB = (root - vB) * collisionVector;
-
-    ballA->changeVelocity(deltaVA);
-    ballB->changeVelocity(deltaVB);
-
-}
-
-bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB)
-{
-
-
+void StageTwoPlayableGame::resolveCollision(Ball *ballA, Ball *ballB) {
+    //SOURCE: Assignment 1 spec (with comments removed)
     QVector2D posA = ballA->getPosition();
     QVector2D velA = ballA->getVelocity();
     float massA = ballA->getMass();
-    //and ball B
     QVector2D posB = ballB->getPosition();
     QVector2D velB = ballB->getVelocity();
     float massB = ballB->getMass();
 
     float mR = massB / massA;
-
     QVector2D collisionVector = posB - posA;
     collisionVector.normalize();
     double vA = QVector2D::dotProduct(collisionVector, velA);
     double vB = QVector2D::dotProduct(collisionVector, velB);
+    if (vA <= 0 && vB >= 0) {
+        return;
+    }
+    double a = -(mR + 1);
+    double b = 2 * (mR * vB + vA);
+    double c = -((mR - 1) * vB * vB + 2 * vA * vB);
+    double discriminant = sqrt(b * b - 4 * a * c);
+    double root = (-b + discriminant)/(2 * a);
+    if (root - vB < 0.01) {
+        root = (-b - discriminant)/(2 * a);
+    }
+    QVector2D deltaVA = mR * (vB - root) * collisionVector;
+    QVector2D deltaVB = (root - vB) * collisionVector;
+    ballA->changeVelocity(deltaVA);
+    ballB->changeVelocity(deltaVB);
+}
+
+bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB) {
+    //SOURCE: Assignment 1&2 spec
+    /* the code from both specs have been modified
+     * so that they work with each other */
+    QVector2D posA = ballA->getPosition();
+    QVector2D velA = ballA->getVelocity();
+    float massA = ballA->getMass();
+    QVector2D posB = ballB->getPosition();
+    QVector2D velB = ballB->getVelocity();
+    float massB = ballB->getMass();
+    float mR = massB / massA;
+    QVector2D collisionVector = posB - posA;
+    collisionVector.normalize();
+    double vA = QVector2D::dotProduct(collisionVector, velA);
+    double vB = QVector2D::dotProduct(collisionVector, velB);
+    //if the balls are moving away from each other they will not break
     if (vA <= 0 && vB >= 0) {
         return false;
     }
@@ -413,15 +364,15 @@ bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB)
     double c = -((mR - 1) * vB * vB + 2 * vA * vB);
     double discriminant = sqrt(b * b - 4 * a * c);
     double root = (-b + discriminant)/(2 * a);
-    //only one of the roots is the solution, the other pertains to the current velocities
     if (root - vB < 0.01) {
         root = (-b - discriminant)/(2 * a);
     }
 
 
-    //The resulting changes in velocity for ball A and B
+    //The resulting changes in velocity for ball A
     QVector2D deltaVA = mR * (vB - root) * collisionVector;
 
+    //The following part is mainly sourced from the assignment 2 spec
     StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA);
     //if the dynamic cast failed, ballA is not breakable
     if (!bA) {
@@ -431,62 +382,57 @@ bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB)
     float ballStrength = bA->getStrength();
     QVector2D deltaV = deltaVA;
     float energyOfCollision = ballMass*deltaV.lengthSquared();
+    //if the ballstrength is less than the energy of collision then it will break
     return ballStrength < energyOfCollision;
 }
 
-bool StageTwoPlayableGame::isCollision(const Ball *ballA, const Ball *ballB) const
-{
+bool StageTwoPlayableGame::isCollision(const Ball *ballA, const Ball *ballB) const {
     return ballA->getPosition().distanceToPoint(ballB->getPosition()) <= ballA->getRadius() + ballB->getRadius();
 }
 
-void StageTwoPlayableGame::hitTheWhiteBall()
-{
-    //Properties of two colliding balls,
+void StageTwoPlayableGame::hitTheWhiteBall() {
+    /* The following code is sourced from Assignment 1 and
+     * has been modified to fullfill the purpose of a cue
+     * hitting the white ball */
+
+    //Properties of a white ball and "cue"
     //ball A
     QVector2D posA = m_whiteBall.lock()->getPosition();
     QVector2D velA = m_whiteBall.lock()->getVelocity();
-    //and ball B is actually the cue lol
+    //and properties of the cue
     QVector2D posB = m_mousePos;
+    /* A vector going from B->A is calculated A-B.
+    We divide this velocity by a scalar 1.2 to make sure
+    the velocity of the hit doesn't get out of control */
     QVector2D velB = (posA - posB) / 1.2;
 
-    //calculate their mass ratio
+    /* we set the mass ratio equal to one so the resultant
+     * velocity is the same no matter what the mass of the cue
+     * ball is */
     float mR = 1;
-
-    //calculate the axis of collision
     QVector2D collisionVector = posB - posA;
     collisionVector.normalize();
-
-    //the proportion of each balls velocity along the axis of collision
     double vA = QVector2D::dotProduct(collisionVector, velA);
     double vB = QVector2D::dotProduct(collisionVector, velB);
-    //the balls are moving away from each other so do nothing
+    //the "balls" are moving away from each other so do nothing
     if (vA <= 0 && vB >= 0) {
         return;
     }
-
-    //The velocity of each ball after a collision can be found by solving the quadratic equation
-    //given by equating momentum and energy before and after the collision and finding the velocities
-    //that satisfy this
-    //-(mR+1)x^2 2*(mR*vB+vA)x -((mR-1)*vB^2+2*vA*vB)=0
-    //first we find the discriminant
     double a = -(mR + 1);
     double b = 2 * (mR * vB + vA);
     double c = -((mR - 1) * vB * vB + 2 * vA * vB);
     double discriminant = sqrt(b * b - 4 * a * c);
     double root = (-b + discriminant)/(2 * a);
-    //only one of the roots is the solution, the other pertains to the current velocities
     if (root - vB < 0.01) {
         root = (-b - discriminant)/(2 * a);
     }
 
-
     //The resulting changes in velocity for the cue ball
     m_whiteBall.lock()->changeVelocity(mR * (vB - root) * collisionVector);
-
+    //we disregard deltaB since the cue is not actually a ball
 }
 
-void StageTwoPlayableGame::render(QPainter &painter, Ball *ball)
-{
+void StageTwoPlayableGame::render(QPainter &painter, Ball *ball) {
     painter.save();
     painter.setBrush(ball->getColour());
     painter.drawEllipse(ball->getPosition().toPointF(),
