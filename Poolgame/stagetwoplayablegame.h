@@ -82,6 +82,7 @@ public:
     /**
      * @brief animate
      * @param dt
+     * XXX
      */
     virtual void animate(double dt) override;
 

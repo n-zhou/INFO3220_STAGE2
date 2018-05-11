@@ -120,7 +120,7 @@ int StageTwoPlayableGame::getMinimumWidth() const
     return m_table->getWidth();
 }
 
-void StageTwoPlayableGame::animate(double dt){
+void StageTwoPlayableGame::animate(double dt) {
 
     //remove balls that are encompassed in pockets
     for (int i = 0; i < m_balls.size(); ++i) {
@@ -135,6 +135,7 @@ void StageTwoPlayableGame::animate(double dt){
 
     std::vector<std::shared_ptr<Ball>> oddChildren;
 
+    //FIXME
     for (int i = 0; i < m_balls.size(); ++i) {
         std::shared_ptr<Ball> ballA = m_balls.at(i);
 
