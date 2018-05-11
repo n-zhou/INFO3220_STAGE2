@@ -136,12 +136,12 @@ void StageTwoPlayableGame::animate(double dt) {
     std::vector<std::shared_ptr<Ball>> oddChildren;
 
     //FIXME
+    //XXX
     for (int i = 0; i < m_balls.size(); ++i) {
         std::shared_ptr<Ball> ballA = m_balls.at(i);
-
         for (int j = i + 1; j < m_balls.size(); ++j) {
-
             std::shared_ptr<Ball> ballB = m_balls.at(j);
+
             if (isCollision(ballA.get(), ballB.get())) {
 
                 if (isBreakable(ballA.get(), ballB.get()) && isBreakable(ballB.get(), ballB.get())) {
@@ -182,7 +182,7 @@ void StageTwoPlayableGame::animate(double dt) {
         for (auto nestedIt = it + 1; nestedIt != m_balls.end(); ++nestedIt) {
             std::shared_ptr<Ball> ballB = *nestedIt;
 
-            //check that the balls collide
+            //check that the balls collide and resolve if they do
             if (isCollision(ballA.get(), ballB.get())) {
                 resolveCollision(ballA.get(), ballB.get());
             }

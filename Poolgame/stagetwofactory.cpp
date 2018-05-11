@@ -244,24 +244,6 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
         std::cerr << "missing both ball position" << std::endl;
     }
 
-    if (ballData.contains("velocity")) {
-        QJsonObject ballVelocity = ballData["velocity"].toObject();
-
-        if (ballVelocity.contains("x")) {
-            vel.setX(ballVelocity["x"].toDouble());
-        } else {
-            std::cerr << "missing ball x velocity" << std::endl;
-        }
-
-        if (ballVelocity.contains("y")) {
-            vel.setY(ballVelocity["y"].toDouble());
-        } else {
-            std::cerr << "missing ball y velocity" << std::endl;
-        }
-    } else {
-        std::cerr << "ball velocity not provided" << std::endl;
-    }
-
     pos += parentBall->getPosition();
     std::shared_ptr<StageTwoBall> ret = std::shared_ptr<StageTwoBall>(
                 new StageTwoBall(QColor(colour.c_str()),
