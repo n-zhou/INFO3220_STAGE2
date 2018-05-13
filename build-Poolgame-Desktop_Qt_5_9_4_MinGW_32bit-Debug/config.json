@@ -39,7 +39,7 @@
                 {"colour":"yellow","position":{"x":-10,"y":0},"mass":1,"radius":10},
                 {"colour":"darkgreen","position":{"x":10,"y":0}},
                 {"colour":"darkblue","position":{"x":0,"y":-10}},
-                {"position":{"x":0,"y":10}, "mass":2,"strength":1e7,
+                {"position":{"x":0,"y":10}, "mass":2,"strength":1e6,
                     "balls":[
                         {"colour":"teal","strength":1e3,
                             "balls":[
