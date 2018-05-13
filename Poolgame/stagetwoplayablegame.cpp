@@ -3,8 +3,8 @@
 
 void draw(QPainter &painter, Ball &ball);
 
-StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> &table, std::vector<std::shared_ptr<Ball>> &balls)
-    : AbstractPlayableGame(), m_table(table.release()), m_balls(balls), m_clicked(false), m_toggle(false)
+StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> table, std::vector<std::shared_ptr<Ball>> &balls)
+    : AbstractPlayableGame(), m_table(std::move(table)), m_balls(balls), m_clicked(false), m_toggle(false)
 {
     //set the white ball
     for (auto b : m_balls) {
@@ -110,23 +110,21 @@ void StageTwoPlayableGame::render(QPainter &painter) {
     }
 }
 
-int StageTwoPlayableGame::getMinimumHeight() const
-{
+int StageTwoPlayableGame::getMinimumHeight() const {
     return m_table->getHeight();
 }
 
-int StageTwoPlayableGame::getMinimumWidth() const
-{
+int StageTwoPlayableGame::getMinimumWidth() const {
     return m_table->getWidth();
 }
 
 void StageTwoPlayableGame::animate(double dt) {
 
     //remove balls that are encompassed in pockets
-    for (int i = 0; i < m_balls.size(); ++i) {
+    for (size_t i = 0; i < m_balls.size(); ++i) {
         std::shared_ptr<Ball> ballA = m_balls.at(i);
-        for (auto& pocket : *m_table->getPockets()) {
-            if (ballA.get()->getPosition().distanceToPoint(pocket.get()->getPos()) + ballA.get()->getRadius() <= pocket.get()->getRadius()) {
+        for (auto pocket : *m_table->getPockets()) {
+            if (ballA->getPosition().distanceToPoint(pocket.get()->getPos()) + ballA->getRadius() <= pocket->getRadius()) {
                 m_balls.erase(m_balls.begin() + i--);
                 break;
             }
@@ -137,9 +135,9 @@ void StageTwoPlayableGame::animate(double dt) {
 
     //FIXME
     //XXX
-    for (int i = 0; i < m_balls.size(); ++i) {
+    for (size_t i = 0; i < m_balls.size(); ++i) {
         std::shared_ptr<Ball> ballA = m_balls.at(i);
-        for (int j = i + 1; j < m_balls.size(); ++j) {
+        for (size_t j = i + 1; j < m_balls.size(); ++j) {
             std::shared_ptr<Ball> ballB = m_balls.at(j);
 
             if (isCollision(ballA.get(), ballB.get())) {
@@ -191,7 +189,8 @@ void StageTwoPlayableGame::animate(double dt) {
         // move ball due to speed
         ballA->translate(ballA->getVelocity() * dt);
 
-        //set the velocity of the ball to 0 if it's close enough to 0
+        /* set the velocity of the ball to 0 if it's close enough to 0 to avoid
+         * weird floating point behaviour and NaN errors  */
         if (std::fabs(ballA->getVelocity().x()) < 3 && std::fabs(ballA->getVelocity().y()) < 3) {
             ballA->multiplyVelocity(QVector2D(0, 0));
             continue;

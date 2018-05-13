@@ -8,9 +8,10 @@ std::unique_ptr<AbstractPlayableGame> StageTwoBuilder::getResult()
         throw std::invalid_argument("builder finished with no table supplied");
     }
 
-    AbstractPlayableGame *retGame = new StageTwoPlayableGame(m_buildingTable, m_buildingBalls);
+    std::unique_ptr<AbstractPlayableGame> retGame = std::unique_ptr<AbstractPlayableGame>(
+                new StageTwoPlayableGame(std::move(m_buildingTable), m_buildingBalls));
     //need to reset for when we build next
     m_buildingBalls.clear();
     m_buildingTable = nullptr;
-    return std::unique_ptr<AbstractPlayableGame>(retGame);
+    return retGame;
 }

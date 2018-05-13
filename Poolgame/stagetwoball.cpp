@@ -4,7 +4,7 @@ void StageTwoBall::translate(QVector2D vec) {
     m_pos += vec;
 
     for (auto b : m_balls) {
-        b.get()->translate(vec);
+        b->translate(vec);
     }
 
 }
@@ -17,11 +17,11 @@ void StageTwoBall::render(QPainter &painter) {
 
     //draw the inner balls on top only if the user toggles it
     for (auto b : m_balls) {
-        b.get()->render(painter);
+        b->render(painter);
     }
 }
 
-std::vector<std::shared_ptr<Ball>>& StageTwoBall::getBalls() {
+std::vector<std::shared_ptr<Ball>> &StageTwoBall::getBalls() {
     return m_balls;
 }
 
@@ -31,13 +31,11 @@ void StageTwoBall::addBall(std::shared_ptr<Ball> ball) {
 }
 
 
-double StageTwoBall::getStrength() const
-{
+double StageTwoBall::getStrength() const {
     return m_strength;
 }
 
-double StageTwoBall::getMass() const
-{
+double StageTwoBall::getMass() const {
     double mass = m_mass;
     for (auto b : m_balls) {
         mass += b->getMass();

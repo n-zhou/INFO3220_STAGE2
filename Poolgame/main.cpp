@@ -46,12 +46,13 @@ QJsonObject loadConfig() {
 int main(int argc, char *argv[]) {
     QJsonObject conf = loadConfig();
     bool stage2 = (!conf.contains("stage2") || !conf["stage2"].toBool()) ? false : true;
-    // create our gambased on our config
+    // create our game based on our config
     GameDirector director(&conf);
-    // set and transfer ownership of this builder to the director,
+    /* set and transfer ownership of this builder to the director.
+     * we choose the builder based on whether the config file is a
+     * stage 2 config file. */
     director.setBuilder(stage2 ? new StageTwoBuilder() : new StageOneBuilder());
     std::unique_ptr<AbstractPlayableGame> game = director.createGame();
-
     // display our dialog that contains our game and run
     QApplication a(argc, argv);
     Dialog w(std::move(game), nullptr);
