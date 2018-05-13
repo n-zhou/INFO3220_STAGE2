@@ -142,7 +142,7 @@ void StageTwoPlayableGame::animate(double dt) {
 
             if (isCollision(ballA.get(), ballB.get())) {
 
-                if (isBreakable(ballA.get(), ballB.get()) && isBreakable(ballB.get(), ballB.get())) {
+                if (isBreakable(ballA.get(), ballB.get()) && isBreakable(ballB.get(), ballA.get())) {
 
                     std::vector<std::shared_ptr<Ball>> copy1 = breakBall(ballA.get(), ballB.get());
                     std::vector<std::shared_ptr<Ball>> copy2 = breakBall(ballB.get(), ballA.get());
@@ -152,13 +152,11 @@ void StageTwoPlayableGame::animate(double dt) {
                     m_balls.erase(m_balls.begin() + i--);
                     break;
                 } else if (isBreakable(ballA.get(), ballB.get())) {
-
                     std::vector<std::shared_ptr<Ball>> copy = breakBall(ballA.get(), ballB.get());
                     oddChildren.insert(oddChildren.end(), copy.begin(), copy.end());
                     m_balls.erase(m_balls.begin() + i--);
                     break;
                 } else if (isBreakable(ballB.get(), ballA.get())) {
-
                     std::vector<std::shared_ptr<Ball>> copy = breakBall(ballB.get(), ballA.get());
                     oddChildren.insert(oddChildren.end(), copy.begin(), copy.end());
                     m_balls.erase(m_balls.begin() + j--);
@@ -168,6 +166,7 @@ void StageTwoPlayableGame::animate(double dt) {
         }
     }
 
+    //add the children of broken balls to our ball list after checking no other parents break
     m_balls.insert(m_balls.end(), oddChildren.begin(), oddChildren.end());
 
     for (auto it = m_balls.begin(); it != m_balls.end(); ++it) {
@@ -376,6 +375,7 @@ bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB) {
     StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA);
     //if the dynamic cast failed, ballA is not breakable
     if (!bA) {
+        std::cerr << "cast failed" <<std::endl;
         return false;
     }
     float ballMass = bA->getMass();

@@ -25,6 +25,7 @@ public:
                  int radius,
                  double strength) :
         Ball(colour, position, velocity, mass, radius),
+        m_balls(),
         m_strength(strength) {}
 
     ~StageTwoBall()
@@ -58,10 +59,19 @@ public:
      */
     std::vector<std::shared_ptr<Ball>> &getBalls();
 
+    /**
+     * @brief getMass - returns the net total mass of this ball
+     * @return the net total mass of this ball
+     */
     double getMass() const override;
+
+    /**
+     * @brief getStrength returns the strength of the ball
+     * @return the strength of the ball
+     */
     double getStrength() const;
 
-private:
+protected:
     std::vector<std::shared_ptr<Ball>> m_balls;
     double m_strength;
 };
