@@ -35,27 +35,21 @@ public:
 
     /**
      * @brief rightClick - this method should be called whenever
-     * a there is a rightclick mouse event. The Default behaviour
-     * of this method is to ignore it so it is recommended that subclasses
-     * override this behaviour.
-     *
+     * a there is a rightclick mouse event.
      * @param e - The QMouseEvent associated with the rightclick
      */
     virtual void rightClick(QMouseEvent *e) {}
 
     /**
      * @brief rightClickRelease - this method is called whenever the rightclick
-     * is released. The default behaviour of this class is to ignore it. As such
-     * subclasses would override this defualt behaviour.
+     * is released.
      * @param e - The QMouseEvent associated with releasing the right click
      */
     virtual void rightClickRelease(QMouseEvent *e) {}
 
     /**
      * @brief leftClick - this method should be called whenever
-     * a there is a leftclick mouse event. The Default behaviour
-     * of this method is to ignore it so it is recommended that subclasses
-     * override this behaviour.
+     * a there is a leftclick mouse event.
      *
      * @param e - The QMouseEvent associated with releasing the left click
      */
@@ -103,8 +97,8 @@ public:
 
     /**
      * @brief animate - applys the physics to the game based on
-     * the paramater
-     * @param dt -
+     * the paramater dt (delta t).
+     * @param dt - the number of seconds between each call of this method.
      */
     virtual void animate(double dt) = 0;
 

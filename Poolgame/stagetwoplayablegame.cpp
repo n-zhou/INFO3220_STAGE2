@@ -71,14 +71,14 @@ void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event) {
             std::cout << "Can't stop the white ball when it's pocketed :(" << std::endl;
         }
     }
+
     //we'll place a new white ball in the game just because the user pressed control
     if (event->key() == Qt::Key_Control) {
-        m_balls.push_back(std::shared_ptr<Ball>(new StageTwoBall(QColor("white"),
-                                                                 QVector2D(100, 100),
-                                                                 QVector2D(0, 0),
-                                                                 Default::Ball::mass,
-                                                                 Default::Ball::radius,
-                                                                 Default::Ball::strength)));
+        m_balls.push_back(std::shared_ptr<Ball>(
+                              new StageTwoBall(QColor("white"), QVector2D(100, 100),
+                                               QVector2D(0, 0), Default::Ball::mass,
+                                               Default::Ball::radius, Default::Ball::strength)
+                              ));
         m_whiteBall = m_balls.back();
     }
 }
@@ -131,10 +131,9 @@ void StageTwoPlayableGame::animate(double dt) {
         }
     }
 
-    std::vector<std::shared_ptr<Ball>> oddChildren;
-
     //FIXME
     //XXX
+    std::vector<std::shared_ptr<Ball>> oddChildren;
     for (size_t i = 0; i < m_balls.size(); ++i) {
         std::shared_ptr<Ball> ballA = m_balls.at(i);
         for (size_t j = i + 1; j < m_balls.size(); ++j) {
@@ -171,18 +170,11 @@ void StageTwoPlayableGame::animate(double dt) {
 
     for (auto it = m_balls.begin(); it != m_balls.end(); ++it) {
         std::shared_ptr<Ball> ballA = *it;
-        // correct ball velocity if colliding with table
-        if (isCollision(m_table.get(), ballA.get())) {
-            resolveCollision(m_table.get(), ballA.get());
-        }
+        resolveCollision(m_table.get(), ballA.get());
         // check collision with all later balls
         for (auto nestedIt = it + 1; nestedIt != m_balls.end(); ++nestedIt) {
             std::shared_ptr<Ball> ballB = *nestedIt;
-
-            //check that the balls collide and resolve if they do
-            if (isCollision(ballA.get(), ballB.get())) {
-                resolveCollision(ballA.get(), ballB.get());
-            }
+            resolveCollision(ballA.get(), ballB.get());
         }
 
         // move ball due to speed
@@ -198,7 +190,7 @@ void StageTwoPlayableGame::animate(double dt) {
         ballA->changeVelocity(-ballA->getVelocity() * m_table->getFriction() * dt);
     }
 
-    //update the white ball if there still is one
+    //if there is still a whiteball we will stop the user aiming if it is moving
     if (!m_whiteBall.expired()) {
         QVector2D vel = m_whiteBall.lock()->getVelocity();
         //if the ball moved during aiming, we will remove control from the player
@@ -309,34 +301,30 @@ void StageTwoPlayableGame::resolveCollision(Table *table, Ball *ball)
 }
 
 void StageTwoPlayableGame::resolveCollision(Ball *ballA, Ball *ballB) {
-    //SOURCE: Assignment 1 spec (with comments removed)
-    QVector2D posA = ballA->getPosition();
-    QVector2D velA = ballA->getVelocity();
-    float massA = ballA->getMass();
-    QVector2D posB = ballB->getPosition();
-    QVector2D velB = ballB->getVelocity();
-    float massB = ballB->getMass();
+    // SOURCE : ASSIGNMENT SPEC
 
-    float mR = massB / massA;
-    QVector2D collisionVector = posB - posA;
+    // if not colliding (distance is larger than radii)
+    QVector2D collisionVector = ballB->getPosition() - ballA->getPosition();
+    if (collisionVector.length() > ballA->getRadius() + ballB->getRadius()) return;
     collisionVector.normalize();
-    double vA = QVector2D::dotProduct(collisionVector, velA);
-    double vB = QVector2D::dotProduct(collisionVector, velB);
-    if (vA <= 0 && vB >= 0) {
-        return;
+
+    float mr = ballB->getMass() / ballA->getMass();
+    double pa = QVector2D::dotProduct(collisionVector, ballA->getVelocity());
+    double pb = QVector2D::dotProduct(collisionVector, ballB->getVelocity());
+
+    if (pa <= 0 && pb >= 0) return;
+
+    double a = -(mr + 1);
+    double b = 2*(mr * pb + pa);
+    double c = -((mr - 1)*pb*pb + 2*pa*pb);
+    double disc = sqrt(b*b - 4*a*c);
+    double root = (-b + disc)/(2*a);
+    if (root - pb < 0.01) {
+        root = (-b - disc)/(2*a);
     }
-    double a = -(mR + 1);
-    double b = 2 * (mR * vB + vA);
-    double c = -((mR - 1) * vB * vB + 2 * vA * vB);
-    double discriminant = sqrt(b * b - 4 * a * c);
-    double root = (-b + discriminant)/(2 * a);
-    if (root - vB < 0.01) {
-        root = (-b - discriminant)/(2 * a);
-    }
-    QVector2D deltaVA = mR * (vB - root) * collisionVector;
-    QVector2D deltaVB = (root - vB) * collisionVector;
-    ballA->changeVelocity(deltaVA);
-    ballB->changeVelocity(deltaVB);
+
+    ballA->changeVelocity(mr * (pb - root) * collisionVector);
+    ballB->changeVelocity((root-pb) * collisionVector);
 }
 
 bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB) {

@@ -15,22 +15,33 @@
  * @see AbstractPlayableGame
  */
 
-class StageOneAdaptor : public AbstractPlayableGame
-{
+class StageOneAdaptor : public AbstractPlayableGame {
 public:
-    StageOneAdaptor(Game *game) : AbstractPlayableGame(),
-        m_game(game) {}
+    StageOneAdaptor(Game *game) :
+        AbstractPlayableGame(), m_game(game) {}
 
+    /* delete the only object we manage */
     ~StageOneAdaptor() {
         delete m_game;
     }
 
+    /**
+     * @brief render - Draws the game onto the screen
+     * @param painter - QPainter used to draw the objects with
+     */
     void render(QPainter &painter) override;
 
+    /**
+     * @brief animate - applys the physics to the game based on
+     * the paramater dt (delta t).
+     * @param dt - the number of seconds between each call of this method.
+     */
     void animate(double dt) override;
 
+    /* how large the window's width should at least be */
     int getMinimumHeight() const override;
 
+    /* how large the window's height should at least be */
     int getMinimumWidth() const override;
 
 private:

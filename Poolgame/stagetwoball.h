@@ -9,64 +9,51 @@
 #include <iostream>
 
 /**
- * @brief The StageTwoBall class
+ * @brief The StageTwoBall class represents a ball in the game of pool
+ * which contains the ability to hold balls inside it as well as break apart.
  *
  * @author nzho8446
  * @see Ball
  * @see StageOneBall
  * @since Stage 2
  */
+
 class StageTwoBall : public Ball {
 public:
-    StageTwoBall(QColor colour,
-                 QVector2D position,
-                 QVector2D velocity,
-                 double mass,
-                 int radius,
-                 double strength) :
+    StageTwoBall(QColor colour, QVector2D position, QVector2D velocity,
+                 double mass, int radius, double strength) :
         Ball(colour, position, velocity, mass, radius),
-        m_balls(),
-        m_strength(strength) {}
+        m_balls(), m_strength(strength) {}
 
-    ~StageTwoBall() {}
+    virtual ~StageTwoBall() {}
 
     /**
      * @brief render - draw the ball to the screen
      * @param painter - QPainter that is owned by the dialog
      */
-    void render(QPainter &painter) override;
+    virtual void render(QPainter &painter) override;
 
     /**
      * @brief translate - Move the ball's position by provided vector
      * @param vec - vector
      */
-    void translate(QVector2D vec) override;
+    virtual void translate(QVector2D vec) override;
 
     /**
-     * @brief addBalls - method not inherited from superclass Ball. This
-     * method is used to add innerballs.
-     * @param ballData
+     * @brief addBall - adds an inner ball to this ball
+     * @param ball - the ball we are going to contain in the parent
+     * ball.
      */
-    void addBall(std::shared_ptr<Ball> ball);
-
-    /**
-     * @brief getBalls - this method returns a vector containing
-     * the balls inside this ball.
-     * @return the vector containing the inner balls of this ball.
-     */
-    std::vector<std::shared_ptr<Ball>> &getBalls();
+    virtual void addBall(std::shared_ptr<Ball> ball);
 
     /**
      * @brief getMass - returns the net total mass of this ball
      * @return the net total mass of this ball
      */
-    double getMass() const override;
+    virtual double getMass() const override;
 
-    /**
-     * @brief getStrength returns the strength of the ball
-     * @return the strength of the ball
-     */
-    double getStrength() const;
+    std::vector<std::shared_ptr<Ball>> &getBalls();
+    virtual double getStrength() const;
 
 protected:
     std::vector<std::shared_ptr<Ball>> m_balls;

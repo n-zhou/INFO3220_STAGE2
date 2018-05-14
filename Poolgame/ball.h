@@ -16,6 +16,8 @@
  *
  * @author "James Butcher"
  * @author nzho8446
+ * @see StageOneBall
+ * @see StageTwoBall
  * @since Stage 1
  */
 
@@ -27,31 +29,11 @@ protected:
     double m_mass;
     int m_radius;
 public:
-
-    /**
-     * @brief ~Ball
-     * @since Stage 1
-     */
     virtual ~Ball() {}
-
-    /**
-     * @brief Ball
-     * @param colour
-     * @param position
-     * @param velocity
-     * @param mass
-     * @param radius
-     */
-    Ball(QColor colour,
-         QVector2D position,
-         QVector2D velocity,
-         double mass,
-         int radius) :
-        m_brush(colour),
-        m_pos(position),
-        m_velocity(velocity),
-        m_mass(mass),
-        m_radius(radius) {}
+    Ball(QColor colour, QVector2D position,
+         QVector2D velocity, double mass, int radius) :
+        m_brush(colour), m_pos(position), m_velocity(velocity),
+        m_mass(mass), m_radius(radius) {}
 
     /**
      * @brief render - draw the ball to the screen
@@ -82,19 +64,37 @@ public:
      * @param vel - vector
      */
     void multiplyVelocity(const QVector2D& vel) { m_velocity *= vel; }
+
+    /**
+     * @brief getMass returns the mass of the ball. This method
+     * has been marked virtual since Stage2.
+     * @return - the mass of the ball
+     */
     virtual double getMass() const { return m_mass; }
     double getRadius() const { return m_radius; }
     QVector2D getPosition() const { return m_pos; }
     QColor getColour() const { return m_brush.color(); }
 
-    void render(QPainter &painter, Ball *b);
-
 };
 
 /**
- * @brief The StageOneBall class implements the Ball interface.
+ * @brief The StageOneBall class implements the Ball interface. This
+ * implementation works fine for stage 1 configuration files.
+ *
+ * <p>
+ * StageOneBall implements the pure virtual methods from Ball (render()
+ * and translate()). No other method is overriden. The constructor of
+ * StageOneBall shares the same constuctor as Ball.
+ * </p>
+ *
+ * <p>
+ * For configuration files that use a stage later than one or needs
+ * the ball to do features not required in stage one, use an alternative
+ * concrete implementation of  Ball.
+ * </p>
  *
  * @author "James Butcher"
+ * @see StageTwoBall
  * @since Stage 1
  */
 
