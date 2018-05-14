@@ -28,10 +28,7 @@ public:
         m_balls(),
         m_strength(strength) {}
 
-    ~StageTwoBall()
-    {
-
-    }
+    ~StageTwoBall() {}
 
     /**
      * @brief render - draw the ball to the screen

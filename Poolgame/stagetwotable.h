@@ -8,6 +8,7 @@
  *
  * @author nzho8446
  * @see Table
+ *
  * @since Stage 2
  */
 
@@ -19,5 +20,6 @@ public:
 
     void render(QPainter& painter) override;
 protected:
+    //pockets???
 
 };
