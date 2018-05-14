@@ -120,6 +120,7 @@ int StageTwoPlayableGame::getMinimumWidth() const {
 
 void StageTwoPlayableGame::animate(double dt) {
 
+    //XXX
     //remove balls that are encompassed in pockets
     for (size_t i = 0; i < m_balls.size(); ++i) {
         std::shared_ptr<Ball> ballA = m_balls.at(i);
@@ -244,7 +245,7 @@ std::vector<std::shared_ptr<Ball>> StageTwoPlayableGame::breakBall(Ball *ballA, 
     QVector2D pointOfCollision((-deltaV.normalized())*ballRadius);
 
     //for each component ball
-    for (int i = 0; i < children.size(); ++i) {
+    for (auto i = 0; i < children.size(); ++i) {
         std::shared_ptr<Ball> child = children.at(i);
         QVector2D componentBallVelocity = preCollisionVelocity + sqrt(energyPerBall/child.get()->getMass())*(child.get()->getPosition()-pointOfCollision).normalized();
         child.get()->multiplyVelocity(QVector2D(0, 0));
@@ -270,8 +271,7 @@ bool StageTwoPlayableGame::isCollision(const Table *table, const Ball *b) const
     return false;
 }
 
-void StageTwoPlayableGame::resolveCollision(Table *table, Ball *ball)
-{
+void StageTwoPlayableGame::resolveCollision(Table *table, Ball *ball) {
     QVector2D bPos = ball->getPosition();
 
     // resulting multiplicity of direction. If a component is set to -1, it

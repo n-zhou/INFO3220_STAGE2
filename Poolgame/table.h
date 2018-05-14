@@ -73,8 +73,7 @@ public:
  * @author "James Butcher"
  * @since Stage 1
  */
-class StageOneTable : public Table
-{
+class StageOneTable : public Table {
 public:
     StageOneTable(int width, int height, QColor colour, double friction) :
         // table isn't translated anywhere - starts at (0,0)
