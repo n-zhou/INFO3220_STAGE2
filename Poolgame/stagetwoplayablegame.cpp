@@ -120,17 +120,17 @@ int StageTwoPlayableGame::getMinimumWidth() const {
 
 void StageTwoPlayableGame::animate(double dt) {
 
-    //XXX
     //remove balls that are encompassed in pockets
-    for (size_t i = 0; i < m_balls.size(); ++i) {
-        std::shared_ptr<Ball> ballA = m_balls.at(i);
-        for (auto pocket : *m_table->getPockets()) {
-            if (ballA->getPosition().distanceToPoint(pocket.get()->getPos()) + ballA->getRadius() <= pocket->getRadius()) {
-                m_balls.erase(m_balls.begin() + i--);
-                break;
+    for (auto pocket : *m_table->getPockets()) {
+        /* we start from the back to avoid an O(n^2) removal time. Also using auto instead of int is a bad idea */
+        for (int i = m_balls.size()-1; i >= 0; --i) {
+            std::shared_ptr<Ball> ball = m_balls.at(i);
+            if (ball->getPosition().distanceToPoint(pocket->getPos()) + ball->getRadius() <= pocket->getRadius()) {
+                m_balls.erase(m_balls.begin() + i);
             }
         }
     }
+
 
     //FIXME
     //XXX
