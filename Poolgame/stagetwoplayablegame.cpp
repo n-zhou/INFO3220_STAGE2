@@ -130,21 +130,28 @@ void StageTwoPlayableGame::animate(double dt) {
         }
     }
 
+    /* we iterate from the end so children balls added from parent balls breaking
+     * will not cause a the loop to iterate more than it needs to */
     for (int it = m_balls.size()-1; it >= 0; --it) {
         std::weak_ptr<Ball> ballA = m_balls[it];
-        // check collision with all later balls
+        // check collision with all earlier balls
         for (int nestedIt = it - 1; nestedIt >= 0; ) {
             std::weak_ptr<Ball> ballB = m_balls[nestedIt];
             resolveCollision(ballA.lock(), ballB.lock());
-            if (ballA.expired()) {
+            if (ballA.expired() && ballB.expired()) {
+                //we need to decrement by 2 since both balls broke
+                ballA = m_balls[(it -= 2)]; //doing more than one assignent in a single statement is dangerous ;)
+                nestedIt = it - 1;
+            } else if (ballA.expired()) {
+                //we must decrement it by 1 since the original ballA broke
                 ballA = m_balls[--it];
-            }
-            if (ballB.expired() || ballA.expired()) {
-                m_balls[--it];
                 nestedIt = it - 1;
             } else {
+                /* regardless of whether ballB broke by itself or didn't break at all
+                 * we'll decrement the "iterator" */
                 --nestedIt;
             }
+
         }
         resolveCollision(m_table.get(), ballA.lock().get());
         // move ball due to speed

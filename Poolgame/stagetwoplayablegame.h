@@ -106,6 +106,35 @@ public:
 protected:
     std::unique_ptr<Table> m_table;
     std::vector<std::shared_ptr<Ball>> m_balls;
+
+    /**
+     * @brief resolveCollision - modify the ball's velocity if it is colliding with the table
+     * @param table - the table to be bounds checked
+     * @param ball - the ball to move
+     */
+    void resolveCollision(Table *table, Ball *ball);
+
+    /**
+     * @brief resolveCollision - resolve both ball's velocity whether these balls collide. If either
+     * ball breaks due to a collision, they will be removed from the game completely.
+     * @param ballA - first ball
+     * @param ballB - second ball
+     */
+    void resolveCollision(std::shared_ptr<Ball> ballA, std::shared_ptr<Ball> ballB);
+
+    /**
+     * @brief render - a method for forcing balls to draw the parent only
+     * @param painter - the QPainter used to draw the ball
+     * @param ball - a pointer to the ball to be drawn
+     */
+    void render(QPainter &painter, Ball *ball);
+
+    /**
+     * @brief hitTheWhiteBall - applies the change in velocity
+     * to the white ball that is a result of getting hit by the cue.
+     */
+    void hitTheWhiteBall();
+
 private:
     bool m_clicked;
 
@@ -137,31 +166,4 @@ private:
      * with the sides of the table.
      */
     bool isCollision(const Table *table, const Ball *b) const;
-
-    /**
-     * @brief resolveCollision - modify the ball's velocity if it is colliding with the table
-     * @param table - the table to be bounds checked
-     * @param ball - the ball to move
-     */
-    void resolveCollision(Table *table, Ball *ball);
-
-    /**
-     * @brief resolveCollision - resolve both ball's velocity whether these balls collide
-     * @param ballA - first ball
-     * @param ballB - second ball
-     */
-    void resolveCollision(std::shared_ptr<Ball> ballA, std::shared_ptr<Ball> ballB);
-
-    /**
-     * @brief render - a method for forcing balls to draw the parent only
-     * @param painter - the QPainter used to draw the ball
-     * @param ball - a pointer to the ball to be drawn
-     */
-    void render(QPainter &painter, Ball *ball);
-
-    /**
-     * @brief hitTheWhiteBall - applies the change in velocity
-     * to the white ball that is a result of getting hit by the cue.
-     */
-    void hitTheWhiteBall();
 };
