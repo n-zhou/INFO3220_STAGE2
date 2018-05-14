@@ -146,41 +146,11 @@ private:
     void resolveCollision(Table *table, Ball *ball);
 
     /**
-     * @brief isCollision - tests whether two balls are colliding. This
-     * method is used as a predicate for resolveCollision(Ball*, Ball*).
-     * @param ballA - the first ball we are testing
-     * @param ballB - the second ball we are testing
-     * @return <tt>true</tt> if the balls are colliding, otherwise
-     * <tt>false</tt>.
-     */
-    bool isCollision(const Ball *ballA, const Ball *ballB) const;
-
-    /**
-     * @brief isBreakable - checks whether the collision of two balls,
-     * will result in the first one breaking.
-     * @param ballA - the ball we are checking will break
-     * @param ballB - the ball colliding with ballA
-     * @return  <tt>true</tt> if collision of ballA and ballB
-     * is powerful enough to break ballA.
-     */
-    bool isBreakable(Ball *ballA, Ball *ballB);
-
-    /**
      * @brief resolveCollision - resolve both ball's velocity whether these balls collide
      * @param ballA - first ball
      * @param ballB - second ball
      */
-    void resolveCollision(Ball *ballA, Ball *ballB);
-
-    /**
-     * @brief breakBall - applies the change in velocity of the children
-     * balls of ballA as a result of colliding with ballB. The predicate
-     * isBreakable(Ball*, Ball*) must be true before this method is called.
-     * @param ballA - the ball which we are breaking apart
-     * @param ballB - the ball that is colliding with ballA
-     * @return - the children of ballA with their new velocities applied
-     */
-    std::vector<std::shared_ptr<Ball>> breakBall(Ball *ballA, Ball *ballB);
+    void resolveCollision(std::shared_ptr<Ball> ballA, std::shared_ptr<Ball> ballB);
 
     /**
      * @brief render - a method for forcing balls to draw the parent only

@@ -75,9 +75,8 @@ void StageTwoPlayableGame::keyPressEvent(QKeyEvent *event) {
     //we'll place a new white ball in the game just because the user pressed control
     if (event->key() == Qt::Key_Control) {
         m_balls.push_back(std::shared_ptr<Ball>(
-                              new StageTwoBall(QColor("white"), QVector2D(100, 100),
-                                               QVector2D(0, 0), Default::Ball::mass,
-                                               Default::Ball::radius, Default::Ball::strength)
+                              new StageTwoBall(QColor("white"), QVector2D(100, 100),QVector2D(0, 0),
+                                               Default::Ball::mass, Default::Ball::radius, Default::Ball::strength)
                               ));
         m_whiteBall = m_balls.back();
     }
@@ -131,67 +130,36 @@ void StageTwoPlayableGame::animate(double dt) {
         }
     }
 
-
-    //FIXME
-    //XXX
-    std::vector<std::shared_ptr<Ball>> oddChildren;
-    for (size_t i = 0; i < m_balls.size(); ++i) {
-        std::shared_ptr<Ball> ballA = m_balls.at(i);
-        for (size_t j = i + 1; j < m_balls.size(); ++j) {
-            std::shared_ptr<Ball> ballB = m_balls.at(j);
-
-            if (isCollision(ballA.get(), ballB.get())) {
-
-                if (isBreakable(ballA.get(), ballB.get()) && isBreakable(ballB.get(), ballA.get())) {
-
-                    std::vector<std::shared_ptr<Ball>> copy1 = breakBall(ballA.get(), ballB.get());
-                    std::vector<std::shared_ptr<Ball>> copy2 = breakBall(ballB.get(), ballA.get());
-                    oddChildren.insert(oddChildren.end(), copy1.begin(), copy1.end());
-                    oddChildren.insert(oddChildren.end(), copy2.begin(), copy2.end());
-                    m_balls.erase(m_balls.begin() + j);
-                    m_balls.erase(m_balls.begin() + i--);
-                    break;
-                } else if (isBreakable(ballA.get(), ballB.get())) {
-                    std::vector<std::shared_ptr<Ball>> copy = breakBall(ballA.get(), ballB.get());
-                    oddChildren.insert(oddChildren.end(), copy.begin(), copy.end());
-                    m_balls.erase(m_balls.begin() + i--);
-                    break;
-                } else if (isBreakable(ballB.get(), ballA.get())) {
-                    std::vector<std::shared_ptr<Ball>> copy = breakBall(ballB.get(), ballA.get());
-                    oddChildren.insert(oddChildren.end(), copy.begin(), copy.end());
-                    m_balls.erase(m_balls.begin() + j--);
-                }
-            }
-
-        }
-    }
-
-    //add the children of broken balls to our ball list after checking no other parents break
-    m_balls.insert(m_balls.end(), oddChildren.begin(), oddChildren.end());
-
-    for (auto it = m_balls.begin(); it != m_balls.end(); ++it) {
-        std::shared_ptr<Ball> ballA = *it;
-        resolveCollision(m_table.get(), ballA.get());
+    for (int it = m_balls.size()-1; it >= 0; --it) {
+        std::weak_ptr<Ball> ballA = m_balls[it];
         // check collision with all later balls
-        for (auto nestedIt = it + 1; nestedIt != m_balls.end(); ++nestedIt) {
-            std::shared_ptr<Ball> ballB = *nestedIt;
-            resolveCollision(ballA.get(), ballB.get());
+        for (int nestedIt = it - 1; nestedIt >= 0; ) {
+            std::weak_ptr<Ball> ballB = m_balls[nestedIt];
+            resolveCollision(ballA.lock(), ballB.lock());
+            if (ballA.expired()) {
+                ballA = m_balls[--it];
+            }
+            if (ballB.expired() || ballA.expired()) {
+                m_balls[--it];
+                nestedIt = it - 1;
+            } else {
+                --nestedIt;
+            }
         }
-
+        resolveCollision(m_table.get(), ballA.lock().get());
         // move ball due to speed
-        ballA->translate(ballA->getVelocity() * dt);
+        ballA.lock()->translate(ballA.lock()->getVelocity() * dt);
 
         /* set the velocity of the ball to 0 if it's close enough to 0 to avoid
          * weird floating point behaviour and NaN errors  */
-        if (std::fabs(ballA->getVelocity().x()) < 3 && std::fabs(ballA->getVelocity().y()) < 3) {
-            ballA->multiplyVelocity(QVector2D(0, 0));
+        if (std::fabs(ballA.lock()->getVelocity().x()) < 3 && std::fabs(ballA.lock()->getVelocity().y()) < 3) {
+            ballA.lock()->multiplyVelocity(QVector2D(0, 0));
             continue;
         }
         // apply frictionz
-        ballA->changeVelocity(-ballA->getVelocity() * m_table->getFriction() * dt);
+        ballA.lock()->changeVelocity(-ballA.lock()->getVelocity() * m_table->getFriction() * dt);
     }
 
-    //if there is still a whiteball we will stop the user aiming if it is moving
     if (!m_whiteBall.expired()) {
         QVector2D vel = m_whiteBall.lock()->getVelocity();
         //if the ball moved during aiming, we will remove control from the player
@@ -200,58 +168,6 @@ void StageTwoPlayableGame::animate(double dt) {
         }
     }
 
-}
-
-std::vector<std::shared_ptr<Ball>> StageTwoPlayableGame::breakBall(Ball *ballA, Ball *ballB) {
-
-    QVector2D posA = ballA->getPosition();
-    QVector2D velA = ballA->getVelocity();
-    float massA = ballA->getMass();
-    //and ball B
-    QVector2D posB = ballB->getPosition();
-    QVector2D velB = ballB->getVelocity();
-    float massB = ballB->getMass();
-
-    //calculate their mass ratio
-    float mR = massB / massA;
-
-    QVector2D collisionVector = posB - posA;
-    collisionVector.normalize();
-    double vA = QVector2D::dotProduct(collisionVector, velA);
-    double vB = QVector2D::dotProduct(collisionVector, velB);
-    double a = -(mR + 1);
-    double b = 2 * (mR * vB + vA);
-    double c = -((mR - 1) * vB * vB + 2 * vA * vB);
-    double discriminant = sqrt(b * b - 4 * a * c);
-    double root = (-b + discriminant)/(2 * a);
-    if (root - vB < 0.01) {
-        root = (-b - discriminant)/(2 * a);
-    }
-    QVector2D deltaVA = mR * (vB - root) * collisionVector;
-
-    StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA);
-
-    //dynamic cast failed, hence ballA cannot be broken
-    if (!bA) {
-        return std::vector<std::shared_ptr<Ball>>();
-    }
-    std::vector<std::shared_ptr<Ball>> children = bA->getBalls();
-    float ballMass = bA->getMass();
-    float ballRadius = bA->getRadius();
-    QVector2D preCollisionVelocity = ballA->getVelocity();
-    QVector2D deltaV = deltaVA;
-    float energyOfCollision = ballMass*deltaV.lengthSquared();
-    float energyPerBall = energyOfCollision/children.size();
-    QVector2D pointOfCollision((-deltaV.normalized())*ballRadius);
-
-    //for each component ball
-    for (auto i = 0; i < children.size(); ++i) {
-        std::shared_ptr<Ball> child = children.at(i);
-        QVector2D componentBallVelocity = preCollisionVelocity + sqrt(energyPerBall/child.get()->getMass())*(child.get()->getPosition()-pointOfCollision).normalized();
-        child.get()->multiplyVelocity(QVector2D(0, 0));
-        child.get()->changeVelocity(componentBallVelocity);
-    }
-    return children;
 }
 
 bool StageTwoPlayableGame::isCollision(const Table *table, const Ball *b) const
@@ -300,7 +216,7 @@ void StageTwoPlayableGame::resolveCollision(Table *table, Ball *ball) {
     ball->multiplyVelocity(vChange);
 }
 
-void StageTwoPlayableGame::resolveCollision(Ball *ballA, Ball *ballB) {
+void StageTwoPlayableGame::resolveCollision(std::shared_ptr<Ball> ballA, std::shared_ptr<Ball> ballB) {
     // SOURCE : ASSIGNMENT SPEC
 
     // if not colliding (distance is larger than radii)
@@ -322,60 +238,59 @@ void StageTwoPlayableGame::resolveCollision(Ball *ballA, Ball *ballB) {
     if (root - pb < 0.01) {
         root = (-b - disc)/(2*a);
     }
-
-    ballA->changeVelocity(mr * (pb - root) * collisionVector);
-    ballB->changeVelocity((root-pb) * collisionVector);
-}
-
-bool StageTwoPlayableGame::isBreakable(Ball *ballA, Ball *ballB) {
-    //SOURCE: Assignment 1&2 spec
-    /* the code from both specs have been modified
-     * so that they work with each other */
-    QVector2D posA = ballA->getPosition();
-    QVector2D velA = ballA->getVelocity();
-    float massA = ballA->getMass();
-    QVector2D posB = ballB->getPosition();
-    QVector2D velB = ballB->getVelocity();
-    float massB = ballB->getMass();
-    float mR = massB / massA;
-    QVector2D collisionVector = posB - posA;
-    collisionVector.normalize();
-    double vA = QVector2D::dotProduct(collisionVector, velA);
-    double vB = QVector2D::dotProduct(collisionVector, velB);
-    //if the balls are moving away from each other they will not break
-    if (vA <= 0 && vB >= 0) {
-        return false;
-    }
-    double a = -(mR + 1);
-    double b = 2 * (mR * vB + vA);
-    double c = -((mR - 1) * vB * vB + 2 * vA * vB);
-    double discriminant = sqrt(b * b - 4 * a * c);
-    double root = (-b + discriminant)/(2 * a);
-    if (root - vB < 0.01) {
-        root = (-b - discriminant)/(2 * a);
-    }
+    QVector2D deltaVA = mr * (pb - root) * collisionVector;
+    QVector2D deltaVB = (root-pb) * collisionVector;
 
 
-    //The resulting changes in velocity for ball A
-    QVector2D deltaVA = mR * (vB - root) * collisionVector;
+    StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA.get());
 
-    //The following part is mainly sourced from the assignment 2 spec
-    StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA);
-    //if the dynamic cast failed, ballA is not breakable
-    if (!bA) {
-        std::cerr << "cast failed" <<std::endl;
-        return false;
-    }
-    float ballMass = bA->getMass();
-    float ballStrength = bA->getStrength();
+    float ballMass = ballA->getMass();
+    float ballStrength = (bA) ? bA->getStrength() : Default::Ball::strength;
+    float ballRadius = ballA->getRadius();
+    QVector2D preCollisionVelocity = ballA->getVelocity();
     QVector2D deltaV = deltaVA;
     float energyOfCollision = ballMass*deltaV.lengthSquared();
-    //if the ballstrength is less than the energy of collision then it will break
-    return ballStrength < energyOfCollision;
-}
+    if (ballStrength < energyOfCollision) {
+        float energyPerBall = energyOfCollision/bA->getBalls().size();
+        QVector2D pointOfCollision((-deltaV.normalized())*ballRadius);
+        //for each component ball
+        for (auto b : bA->getBalls()) {
+            QVector2D componentBallVelocity = preCollisionVelocity +
+                    sqrt(energyPerBall/b->getMass())*(b->getPosition()-pointOfCollision).normalized();
+            b->changeVelocity(componentBallVelocity);
+            m_balls.push_back(b);
+        };
+        m_balls.erase(std::remove(m_balls.begin(), m_balls.end(), ballA),
+                      m_balls.end());
+    } else {
+        ballA->changeVelocity(deltaVA);
+    }
 
-bool StageTwoPlayableGame::isCollision(const Ball *ballA, const Ball *ballB) const {
-    return ballA->getPosition().distanceToPoint(ballB->getPosition()) <= ballA->getRadius() + ballB->getRadius();
+    StageTwoBall *bB = dynamic_cast<StageTwoBall*>(ballB.get());
+
+    ballMass = ballB->getMass();
+    ballStrength = (bB) ? bB->getStrength() : Default::Ball::strength;
+    ballRadius = ballB->getRadius();
+    preCollisionVelocity = ballB->getVelocity();
+    deltaV = deltaVB;
+    energyOfCollision = ballMass*deltaV.lengthSquared();
+    if (ballStrength < energyOfCollision) {
+        float energyPerBall = energyOfCollision/bB->getBalls().size();
+        QVector2D pointOfCollision((-deltaV.normalized())*ballRadius);
+        //for each component ball
+        for (auto b : bB->getBalls()) {
+            QVector2D componentBallVelocity = preCollisionVelocity +
+                    sqrt(energyPerBall/b->getMass())*(b->getPosition()-pointOfCollision).normalized();
+            b->changeVelocity(componentBallVelocity);
+            m_balls.push_back(b);
+        }
+        m_balls.erase(std::remove(m_balls.begin(), m_balls.end(), ballB),
+                      m_balls.end());
+
+
+    } else {
+        ballB->changeVelocity(deltaVB);
+    }
 }
 
 void StageTwoPlayableGame::hitTheWhiteBall() {
@@ -414,7 +329,6 @@ void StageTwoPlayableGame::hitTheWhiteBall() {
     if (root - vB < 0.01) {
         root = (-b - discriminant)/(2 * a);
     }
-
     //The resulting changes in velocity for the cue ball
     m_whiteBall.lock()->changeVelocity(mR * (vB - root) * collisionVector);
     //we disregard deltaB since the cue is not actually a ball
