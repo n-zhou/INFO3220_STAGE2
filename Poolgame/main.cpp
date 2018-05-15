@@ -45,6 +45,9 @@ QJsonObject loadConfig() {
 
 int main(int argc, char *argv[]) {
     QJsonObject conf = loadConfig();
+    if (conf.contains("stage2") && !conf["stage2"].isBool()) {
+        std::cerr << "Invalid Stage 2 value, setting to Stage 1" << std::endl;
+    }
     bool stage2 = (!conf.contains("stage2") || !conf["stage2"].toBool()) ? false : true;
     // create our game based on our config
     GameDirector director(&conf);

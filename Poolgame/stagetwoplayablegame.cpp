@@ -248,7 +248,6 @@ void StageTwoPlayableGame::resolveCollision(std::shared_ptr<Ball> ballA, std::sh
     QVector2D deltaVA = mr * (pb - root) * collisionVector;
     QVector2D deltaVB = (root-pb) * collisionVector;
 
-
     StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA.get());
 
     float ballMass = ballA->getMass();
@@ -257,6 +256,8 @@ void StageTwoPlayableGame::resolveCollision(std::shared_ptr<Ball> ballA, std::sh
     QVector2D preCollisionVelocity = ballA->getVelocity();
     QVector2D deltaV = deltaVA;
     float energyOfCollision = ballMass*deltaV.lengthSquared();
+    //update the velocity of the parent ball regardless of whether or not it breaks
+    ballA->changeVelocity(deltaVA);
     if (ballStrength < energyOfCollision) {
         float energyPerBall = energyOfCollision/bA->getBalls().size();
         QVector2D pointOfCollision((-deltaV.normalized())*ballRadius);
@@ -267,23 +268,21 @@ void StageTwoPlayableGame::resolveCollision(std::shared_ptr<Ball> ballA, std::sh
             b->changeVelocity(componentBallVelocity);
             m_balls.push_back(b);
         };
+        //erase ballA from our vector of balls since it broke
         m_balls.erase(std::remove(m_balls.begin(), m_balls.end(), ballA),
                       m_balls.end());
-    } else {
-        ballA->changeVelocity(deltaVA);
     }
 
+    //apply the same thing to ballB
     StageTwoBall *bB = dynamic_cast<StageTwoBall*>(ballB.get());
-
-    ballMass = ballB->getMass();
     ballStrength = (bB) ? bB->getStrength() : Default::Ball::strength;
-    ballRadius = ballB->getRadius();
     preCollisionVelocity = ballB->getVelocity();
-    deltaV = deltaVB;
-    energyOfCollision = ballMass*deltaV.lengthSquared();
+    energyOfCollision = ballB->getMass()*deltaVB.lengthSquared();
+    //update the velocity of the parent ball regardless of whether or not it breaks
+    ballB->changeVelocity(deltaVB);
     if (ballStrength < energyOfCollision) {
         float energyPerBall = energyOfCollision/bB->getBalls().size();
-        QVector2D pointOfCollision((-deltaV.normalized())*ballRadius);
+        QVector2D pointOfCollision((-deltaVB.normalized())*ballB->getRadius());
         //for each component ball
         for (auto b : bB->getBalls()) {
             QVector2D componentBallVelocity = preCollisionVelocity +
@@ -291,12 +290,9 @@ void StageTwoPlayableGame::resolveCollision(std::shared_ptr<Ball> ballA, std::sh
             b->changeVelocity(componentBallVelocity);
             m_balls.push_back(b);
         }
+        //erase ballB from our vector of balls since it broke
         m_balls.erase(std::remove(m_balls.begin(), m_balls.end(), ballB),
                       m_balls.end());
-
-
-    } else {
-        ballB->changeVelocity(deltaVB);
     }
 }
 

@@ -49,17 +49,17 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
         QJsonObject ballPosition = ballData["position"].toObject();
 
         //check the ball's x position
-        if (ballPosition.contains("x")) {
+        if (ballPosition.contains("x") && ballPosition["x"].isDouble()) {
             xpos = ballPosition["x"].toDouble();
         } else {
-            std::cerr << "missing ball x position" << std::endl;
+            std::cerr << "missing ball x position or invalid x value" << std::endl;
         }
 
         //check the ball's y position
-        if (ballPosition.contains("y")) {
+        if (ballPosition.contains("y") && ballPosition["y"].isDouble()) {
             ypos = ballPosition["y"].toDouble();
         } else {
-            std::cerr << "missing ball y position" << std::endl;
+            std::cerr << "missing ball y position or invalid y value" << std::endl;
         }
     } else {
         std::cerr << "missing both ball position" << std::endl;
@@ -69,17 +69,17 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
         QJsonObject ballVelocity = ballData["velocity"].toObject();
 
         //check the ball's x position
-        if (ballVelocity.contains("x")) {
+        if (ballVelocity.contains("x") && ballVelocity["x"].isDouble()) {
             xvel = ballVelocity["x"].toDouble();
         } else {
-            std::cerr << "missing ball x velocity" << std::endl;
+            std::cerr << "missing ball x velocity or invalid value" << std::endl;
         }
 
         //check the ball's y position
-        if (ballVelocity.contains("y")) {
+        if (ballVelocity.contains("y") && ballVelocity["y"].isDouble()) {
             yvel = ballVelocity["y"].toDouble();
         } else {
-            std::cerr << "missing ball y velocity" << std::endl;
+            std::cerr << "missing ball y velocity key or invalid value" << std::endl;
         }
     } else {
         std::cerr << "ball velocity not provided" << std::endl;
