@@ -5,8 +5,7 @@
 #include "stagetwopocket.h"
 #include <cassert>
 
-std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
-{
+std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData) {
     std::string colour = Default::Ball::colour;
     double xpos = Default::Ball::xPosition;
     double ypos = Default::Ball::yPosition;
@@ -105,8 +104,7 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData)
     return ret;
 }
 
-std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData)
-{
+std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) {
     int width = Default::Table::x;
     int height = Default::Table::y;
     std::string colour = Default::Table::colour;
@@ -171,22 +169,24 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData)
             QJsonObject pocket = pocketData[i].toObject();
 
             double radius = Default::Table::Pocket::radius;
-            if (pocket.contains("radius")) {
+            if (pocket.contains("radius") && pocket["radius"].isDouble()) {
                 radius = pocket["radius"].toDouble();
+
             } else {
-                std::cerr << "missing pocket radius" << std::endl;
+                std::cerr << "Missing pocket radius or invalid value. Setting to default." << std::endl;
             }
 
 
             QJsonObject position = pocket["position"].toObject();
             //check pocket position
-            if (position.contains("x") && position.contains("y")) {
+            if (position.contains("x") && position.contains("y")
+                    && position["x"].isDouble() && position["y"].isDouble()) {
                 int pX = position["x"].toDouble();
                 int pY = position["y"].toDouble();
 
                 pockets.push_back(std::make_shared<StageTwoPocket>(StageTwoPocket(QVector2D(pX, pY), radius)));
             } else {
-                std::cerr << "missing pocket data, pocket ignored." << std::endl;
+                std::cerr << "Missing pocket data or invalid pocket values. Pocket ignored." << std::endl;
             }
         }
     }
@@ -195,6 +195,7 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData)
 }
 
 std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJsonObject &ballData) {
+    //initialize the properties of the inner ball to default values before we change them
     std::string colour = parentBall->getColour().name().toStdString();
     QVector2D pos(Default::Ball::xPosition, Default::Ball::yPosition);
     QVector2D vel(Default::Ball::xVelocity, Default::Ball::yVelocity);
@@ -209,6 +210,7 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
     }
 
     if (ballData.contains("mass")) {
+
         mass = ballData["mass"].toDouble();
     } else {
         std::cerr << "missing ball mass" << std::endl;

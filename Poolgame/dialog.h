@@ -11,6 +11,25 @@ namespace Ui {
 class Dialog;
 }
 
+/**
+ * @brief The Dialog class creates the window that displays the pool game.
+ *
+ * <p>
+ * Since stage 2, the dialog class sends mouse and keyboard events to a new game class
+ * (AbstractPlayableGame). The member variable m_game is now a smart pointer instead of a
+ * raw pointer. The rest of the member variable raw pointers were not changed to smart
+ * pointers because it is clear that they are only visible to the dialog class.
+ * </p>
+ *
+ * <p>
+ * The constuctor was also modified to take a smart pointer instead of a raw pointer.
+ * </p>
+ * @author "James Butcher"
+ * @author nzho8446
+ * @version Stage 2
+ * @since Stage 1
+ */
+
 class Dialog : public QDialog {
     Q_OBJECT
 
