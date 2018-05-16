@@ -144,8 +144,6 @@ void StageTwoPlayableGame::animate(double dt) {
                 ballA = m_balls[--it];
                 nestedIt = it - 1;
             } else {
-                /* regardless of whether ballB broke by itself or didn't break at all
-                 * we'll decrement the "iterator" */
                 --nestedIt;
             }
 
@@ -168,8 +166,8 @@ void StageTwoPlayableGame::animate(double dt) {
 
     if (!m_whiteBall.expired()) {
         QVector2D vel = m_whiteBall.lock()->getVelocity();
-        //if the ball moved during aiming, we will remove control from the player
         if (!qFuzzyCompare(vel, QVector2D(0, 0))) {
+            //if the ball moved during aiming, we will remove control from the player
             m_clicked = false;
         }
     }
@@ -248,8 +246,8 @@ void StageTwoPlayableGame::resolveCollision(std::shared_ptr<Ball> ballA, std::sh
     QVector2D deltaVB = (root-pb) * collisionVector;
 
     StageTwoBall *bA = dynamic_cast<StageTwoBall*>(ballA.get());
-
     float ballMass = ballA->getMass();
+    /* if the cast was successful we can get the strength from the pointer bA, otherwise we will assume infinity */
     float ballStrength = (bA) ? bA->getStrength() : Default::Ball::strength;
     float ballRadius = ballA->getRadius();
     QVector2D preCollisionVelocity = ballA->getVelocity();
