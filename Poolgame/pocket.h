@@ -9,6 +9,7 @@
  * @see StageTwoPocket
  * @since Stage 2
  */
+
 class Pocket {
 public:
     Pocket(QVector2D pos, double radius) :
@@ -27,5 +28,5 @@ public:
 
 protected:
     QVector2D m_pos;
-    double m_radius;
+    const double m_radius;
 };

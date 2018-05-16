@@ -29,7 +29,7 @@ Dialog::Dialog(std::unique_ptr<AbstractPlayableGame> game, QWidget* parent) :
     dTimer->start(drawFrameMS);
     // set the window size to be at least the table size
     this->resize(m_game->getMinimumWidth(), m_game->getMinimumHeight());
-    this->setMouseTracking(true);
+    this->setMouseTracking(false);
 
 
 
@@ -73,8 +73,7 @@ void Dialog::nextAnim() {
     m_game->animate(animFrameMS/1000.0);
 }
 
-void Dialog::paintEvent(QPaintEvent *)
-{
+void Dialog::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     m_game->render(painter);
 }

@@ -29,7 +29,7 @@ protected:
     int m_ypos;
     std::vector<std::shared_ptr<Pocket>> m_pockets;
     QBrush m_brush;
-    double m_friction;
+    const double m_friction;
 
 public:
     virtual ~Table() {}
@@ -65,7 +65,7 @@ public:
      * @return
      * @since Stage 2
      */
-    const std::vector<std::shared_ptr<Pocket>>* getPockets() const { return &m_pockets; }
+    const std::vector<std::shared_ptr<Pocket>> &getPockets() const { return m_pockets; }
 };
 
 /**

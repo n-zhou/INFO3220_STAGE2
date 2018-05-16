@@ -63,7 +63,8 @@ public:
 
     /**
      * @brief mouseDrag - this method is called whenever the user moves
-     * the mouse around.
+     * the mouse around. This method assumes that the QMouseEvent from the
+     * dialog class has tracking turned on.
      *
      * @param e - The QMouseEvent associated with moving the mouse.
      */
@@ -136,6 +137,12 @@ protected:
     virtual void hitTheWhiteBall();
 
 private:
+    /**
+     * @brief m_clicked - a boolean value to determine whether or not the
+     * user is allowed to be aiming. If the user left clicks while the white ball
+     * is not moving m_click should be <tt>true</tt>, and if they release or the whiteball
+     * doesn't remain stationary, this should be <tt>false</tt>.
+     */
     bool m_clicked;
 
     /**
