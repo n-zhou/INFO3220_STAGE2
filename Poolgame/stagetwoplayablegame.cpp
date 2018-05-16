@@ -38,8 +38,7 @@ void StageTwoPlayableGame::leftClick(QMouseEvent *e) {
         std::cout << "You can only hit the cue when it's not moving!" << std::endl;
         return;
     }
-    m_mousePos.setX(e->x());
-    m_mousePos.setY(e->y());
+    m_mousePos = QVector2D(e->localPos());
     if (m_whiteBall.lock()->getPosition().distanceToPoint(m_mousePos) <= m_whiteBall.lock()->getRadius()) {
         m_clicked = true;
     }
@@ -47,8 +46,7 @@ void StageTwoPlayableGame::leftClick(QMouseEvent *e) {
 
 void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e) {
     if (m_clicked && !m_whiteBall.expired()) {
-        m_mousePos.setX(e->x());
-        m_mousePos.setY(e->y());
+        m_mousePos = QVector2D(e->localPos());
         hitTheWhiteBall();
         m_clicked = false;
     }
@@ -56,8 +54,7 @@ void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e) {
 
 void StageTwoPlayableGame::mouseDrag(QMouseEvent *e) {
     if (m_clicked && !m_whiteBall.expired()) {
-        m_mousePos.setX(e->x());
-        m_mousePos.setY(e->y());
+        m_mousePos = QVector2D(e->localPos());
     }
 }
 
@@ -153,18 +150,20 @@ void StageTwoPlayableGame::animate(double dt) {
             }
 
         }
-        resolveCollision(m_table.get(), ballA.lock().get());
+        //create a shared pointer so we don't need to call lock to every time we want to access the ballA
+        std::shared_ptr<Ball> ball = ballA.lock();
+        resolveCollision(m_table.get(), ball.get());
         // move ball due to speed
-        ballA.lock()->translate(ballA.lock()->getVelocity() * dt);
+        ball->translate(ball->getVelocity() * dt);
 
         /* set the velocity of the ball to 0 if it's close enough to 0 to avoid
          * weird floating point behaviour and NaN errors  */
-        if (std::fabs(ballA.lock()->getVelocity().x()) < 3 && std::fabs(ballA.lock()->getVelocity().y()) < 3) {
+        if (std::fabs(ball->getVelocity().x()) < 3 && std::fabs(ball->getVelocity().y()) < 3) {
             ballA.lock()->multiplyVelocity(QVector2D(0, 0));
             continue;
         }
         // apply frictionz
-        ballA.lock()->changeVelocity(-ballA.lock()->getVelocity() * m_table->getFriction() * dt);
+        ball->changeVelocity(-ball->getVelocity() * m_table->getFriction() * dt);
     }
 
     if (!m_whiteBall.expired()) {
@@ -320,7 +319,6 @@ void StageTwoPlayableGame::hitTheWhiteBall() {
     collisionVector.normalize();
     double vA = QVector2D::dotProduct(collisionVector, velA);
     double vB = QVector2D::dotProduct(collisionVector, velB);
-    //the "balls" are moving away from each other so do nothing
     if (vA <= 0 && vB >= 0) {
         return;
     }
@@ -334,7 +332,6 @@ void StageTwoPlayableGame::hitTheWhiteBall() {
     }
     //The resulting changes in velocity for the cue ball
     m_whiteBall.lock()->changeVelocity(mR * (vB - root) * collisionVector);
-    //we disregard deltaB since the cue is not actually a ball
 }
 
 void StageTwoPlayableGame::render(QPainter &painter, Ball *ball) {
