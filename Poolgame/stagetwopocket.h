@@ -11,8 +11,7 @@
  * @since Stage 2
  */
 
-class StageTwoPocket : public Pocket
-{
+class StageTwoPocket : public Pocket {
 public:
     StageTwoPocket(QVector2D pos, double radius);
 

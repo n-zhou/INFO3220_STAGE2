@@ -15,12 +15,15 @@
  */
 class StageTwoBuilder : public StageOneBuilder {
 public:
-    StageTwoBuilder() : StageOneBuilder(new StageTwoFactory()) {}
+    StageTwoBuilder(AbstractStageFactory *factory = new StageTwoFactory()) :
+        StageOneBuilder(factory) {}
+
+    virtual ~StageTwoBuilder() {}
 
     /**
      * @brief getResult - retrieve the building
      * @return
      */
-    std::unique_ptr<AbstractPlayableGame> getResult();
+    virtual std::unique_ptr<AbstractPlayableGame> getResult();
 };
 

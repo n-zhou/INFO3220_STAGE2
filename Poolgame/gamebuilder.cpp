@@ -7,7 +7,9 @@
 #include <QJsonArray>
 
 StageOneBuilder::~StageOneBuilder() {
-
+    /** the body of the destructor has been deleted since raw pointers have been removed from this class
+     * @since Stage 2
+     */
 }
 
 void StageOneBuilder::addBall(QJsonObject &ballData) {
@@ -21,7 +23,11 @@ void StageOneBuilder::addTable(QJsonObject &tableData) {
 }
 
 std::unique_ptr<AbstractPlayableGame> StageOneBuilder::getResult() {
-
+    // no-one called addBall
+    if (m_buildingBalls.empty()) {
+        // soft fail
+        std::cerr << "warning! pool game without balls created...\n";
+    }
     // likewise for table
     if (m_buildingTable == nullptr) {
         throw std::invalid_argument("builder finished with no table supplied");
@@ -31,6 +37,7 @@ std::unique_ptr<AbstractPlayableGame> StageOneBuilder::getResult() {
     // need to reset for when we build next
     m_buildingBalls.clear();
     m_buildingTable = nullptr;
+    //apply the adaptor to wrap the old game class
     return std::unique_ptr<AbstractPlayableGame>(new StageOneAdaptor(retGame));
 }
 

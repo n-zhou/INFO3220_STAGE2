@@ -117,7 +117,7 @@ int StageTwoPlayableGame::getMinimumWidth() const {
 void StageTwoPlayableGame::animate(double dt) {
 
     //remove balls that are encompassed in pockets
-    for (auto pocket : m_table->getPockets()) {
+    for (auto &pocket : m_table->getPockets()) {
         /* we start from the back to avoid too much element shifting. Also using auto instead of int is a bad idea */
         for (int i = m_balls.size()-1; i >= 0; --i) {
             std::shared_ptr<Ball> ball = m_balls.at(i);
@@ -143,6 +143,9 @@ void StageTwoPlayableGame::animate(double dt) {
                 //we must decrement it by 1 since the original ballA broke
                 ballA = m_balls[--it];
                 nestedIt = it - 1;
+            } else if (ballB.expired()){
+                --it;
+                --nestedIt;
             } else {
                 --nestedIt;
             }

@@ -109,7 +109,7 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) 
     int height = Default::Table::y;
     std::string colour = Default::Table::colour;
     double friction = Default::Table::friction;
-    std::vector<std::shared_ptr<Pocket>> pockets;
+    std::vector<std::unique_ptr<Pocket>> pockets;
 
     //if the table is missing from the config file we operate like stage one
     if (tableData.empty()) {
@@ -184,13 +184,18 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) 
                 int pX = position["x"].toDouble();
                 int pY = position["y"].toDouble();
 
-                pockets.push_back(std::make_shared<StageTwoPocket>(StageTwoPocket(QVector2D(pX, pY), radius)));
+                pockets.push_back(std::unique_ptr<StageTwoPocket>(new StageTwoPocket(QVector2D(pX, pY), radius)));
             } else {
                 std::cerr << "Missing pocket data or invalid pocket values. Pocket ignored." << std::endl;
             }
         }
     }
-
+    /*
+    pockets.erase(
+                std::remove_if(pockets.begin(), pockets.end(),
+                               [](const std::shared_ptr<Pocket> &p {return false;}),
+                pockets.end()));
+*/
     return std::unique_ptr<Table>(new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets));
 }
 
