@@ -136,17 +136,19 @@ void StageTwoPlayableGame::animate(double dt) {
             std::weak_ptr<Ball> ballB = m_balls[nestedIt];
             resolveCollision(ballA.lock(), ballB.lock());
             if (ballA.expired() && ballB.expired()) {
-                //we need to decrement by 2 since both balls broke
+                //we reset the nested for loop and decrement the outer by 2 since 2 balls broke
                 ballA = m_balls[(it -= 2)]; //doing more than one assignent in a single statement is dangerous ;)
                 nestedIt = it - 1;
             } else if (ballA.expired()) {
-                //we must decrement it by 1 since the original ballA broke
+                //we must decrement it by 1 since the original ballA broke and reset the inner for loop
                 ballA = m_balls[--it];
                 nestedIt = it - 1;
             } else if (ballB.expired()){
+                //we decrement both values by 1 so we don't have any funny business
                 --it;
                 --nestedIt;
             } else {
+                //no ball broke so we continue comparing with earlier balls
                 --nestedIt;
             }
 
@@ -154,6 +156,7 @@ void StageTwoPlayableGame::animate(double dt) {
         //create a shared pointer so we don't need to call lock to every time we want to access the ballA
         std::shared_ptr<Ball> ball = ballA.lock();
         resolveCollision(m_table.get(), ball.get());
+
         // move ball due to speed
         ball->translate(ball->getVelocity() * dt);
 

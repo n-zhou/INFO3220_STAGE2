@@ -12,11 +12,14 @@
  * </p>
  *
  * <p>
- * The use of this
+ * It is not recommended to extend this class. It is faily limited in extensiblity
+ * as none of the methods are marked virtual. It also doesn't handle mouse events
+ * that are caused by the user limiting interactiveness.
  * </p>
  *
  * @author "James Butcher"
  * @author nzho8446
+ * @see StageOneAdaptor
  * @since Stage 1
  */
 class Game {

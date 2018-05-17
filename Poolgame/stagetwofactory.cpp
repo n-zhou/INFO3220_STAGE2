@@ -85,22 +85,20 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData) {
     }
 
     std::shared_ptr<StageTwoBall> ret = std::shared_ptr<StageTwoBall>(
-                new StageTwoBall(QColor(colour.c_str()),
-                                 QVector2D(xpos, ypos),
-                                 QVector2D(xvel, yvel),
-                                 mass,
-                                 radius,
-                                 strength));
+                new StageTwoBall(QColor(colour.c_str()), QVector2D(xpos, ypos), QVector2D(xvel, yvel),
+                                 mass, radius, strength));
     QJsonArray ballArray = ballData["balls"].toArray();
     for (int i = 0; i < ballArray.size(); ++i) {
+        //add the inner balls to the parent ball
         ret->addBall(makeBall(ret.get(), ballArray[i].toObject()));
         std::vector<std::shared_ptr<Ball>> &children = ret->getBalls();
         std::shared_ptr<Ball> lastBall = children.back();
         if (ret->getPosition().distanceToPoint(lastBall->getPosition()) + lastBall->getRadius() > ret->getRadius()) {
+            //erase the last child we added if it is outside of the parent ball
             children.erase(children.end()-1, children.end());
-            std::cout << children.size() << std::endl;
         }
     }
+    //return our newly created parent ball
     return ret;
 }
 
@@ -124,8 +122,7 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) 
         std::cerr << "missing size data";
     } else {
 
-        //check table width
-        if (sizeData.contains("x")) {
+        if (sizeData.contains("x") && sizeData["x"].isDouble()) {
             if (sizeData["x"].toDouble() > 0) {
                 width = sizeData["x"].toDouble();
             } else {
@@ -133,33 +130,36 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) 
             }
 
         } else {
-            std::cerr << "missing table width, initializing to default" << std::endl;
+            std::cerr << "missing or invalid table width, initializing to default" << std::endl;
         }
 
         //check table height
-        if (sizeData.contains("y")) {
+        if (sizeData.contains("y") && sizeData["y"].isDouble()) {
             if (sizeData["y"].toDouble() > 0) {
                 height = sizeData["y"].toDouble();
             } else {
                 std::cerr << "invalid table height, setting to default" << std::endl;
             }
         } else {
-            std::cerr << "missing table height, initializing to default" << std::endl;
+            std::cerr << "missing or invalid table height value initializing to default" << std::endl;
         }
     }
 
-    //check for table colour
-    if (tableData.contains("colour")) {
+    if (tableData.contains("colour") && tableData["colour"].isString()) {
         colour = tableData["colour"].toString().toStdString();
     } else {
-        std::cerr << "missing table colour, giving it default value" << std::endl;
+        std::cerr << "missing or invalid table colour, making it green" << std::endl;
     }
 
-    //check for table friction
     if (tableData.contains("friction")) {
-        friction = tableData["friction"].toDouble();
+        if (tableData["friction"].toDouble() >= 0) {
+            friction = tableData["friction"].toDouble();
+        } else {
+            std::cerr << "Cannot have negative friction values" << std::endl;
+        }
+
     } else {
-        std::cerr << "missing friction, setting to default" << std::endl;
+        std::cerr << "missing friction setting to default" << std::endl;
     }
 
     //check for table pockets
@@ -190,12 +190,14 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) 
             }
         }
     }
-    /*
+
+    //remove pockets that aren't partially or fully in the boundary of the table
     pockets.erase(
                 std::remove_if(pockets.begin(), pockets.end(),
-                               [](const std::shared_ptr<Pocket> &p {return false;}),
-                pockets.end()));
-*/
+                               [&width, &height](const std::unique_ptr<Pocket> &p)
+                { return ((p->getPos().x() + p->getRadius() < 0) || (p->getPos().x() - p->getRadius() > width)
+                                || (p->getPos().y() + p->getRadius() < 0) || (p->getPos().y() - p->getRadius() > height)); }),
+                pockets.end());
     return std::unique_ptr<Table>(new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets));
 }
 
@@ -251,8 +253,9 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
         std::cerr << "missing both ball position" << std::endl;
     }
 
+    //make the position of inner ball relative to the parent
     pos += parentBall->getPosition();
-    std::shared_ptr<StageTwoBall> ret = std::shared_ptr<StageTwoBall>(
+    std::unique_ptr<StageTwoBall> ret = std::unique_ptr<StageTwoBall>(
                 new StageTwoBall(QColor(colour.c_str()),
                                  pos,
                                  vel,
@@ -260,15 +263,18 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
                                  radius,
                                  strength));
     if (parentBall->getPosition().distanceToPoint(ret->getPosition()) + ret->getRadius() > parentBall->getRadius()) {
+        //if the new ball we are creating is outside the parent ball we stop don't make the inner balls of this ball
         return ret;
     }
     QJsonArray ballArray = ballData["balls"].toArray();
     for (int i = 0; i < ballArray.size(); ++i) {
+        //recursively make the inner balls
         ret->addBall(this->makeBall(ret.get(), ballArray[i].toObject()));
         std::vector<std::shared_ptr<Ball>> &children = ret->getBalls();
         std::shared_ptr<Ball> lastBall = children.back();
         if (ret->getPosition().distanceToPoint(lastBall->getPosition()) + lastBall->getRadius() > ret->getRadius()) {
-            children.erase(children.end()-1, children.end());
+            //remove the ball we just added if it outside the boundary of the parent ball
+            children.erase(children.end()-1);
         }
     }
     return ret;

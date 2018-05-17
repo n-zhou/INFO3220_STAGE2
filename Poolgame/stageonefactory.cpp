@@ -20,7 +20,7 @@ std::shared_ptr<Ball> StageOneFactory::makeBall(const QJsonObject& ballData) {
     double mass = ballData.value("mass").toDouble();
     double radius = ballData.value("radius").toDouble();
 
-    return std::shared_ptr<Ball>(new StageOneBall(QColor(col), QVector2D(xpos, ypos), QVector2D(xvel, yvel), mass, radius));
+    return std::unique_ptr<Ball>(new StageOneBall(QColor(col), QVector2D(xpos, ypos), QVector2D(xvel, yvel), mass, radius));
 }
 
 std::unique_ptr<Table> StageOneFactory::makeTable(const QJsonObject& tableData) {

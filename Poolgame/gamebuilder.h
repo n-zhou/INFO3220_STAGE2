@@ -5,9 +5,11 @@
 #include <memory>
 
 /**
- * @brief The GameBuilder class
+ * @brief The GameBuilder class builds the game of pool.
  *
  * @see AbstractFactory
+ * @see StageOneBuilder
+ * @see StageTwoBuilder
  * @since Stage 1
  */
 class GameBuilder {
@@ -36,12 +38,12 @@ public:
 };
 
 /**
- * @brief The StageOneBuilder class
+ * @brief The StageOneBuilder class implements the GameBuilder class.
  *
  * @author "James Butcher"
- *
- * @since Stage 1
  * @see GameBuilder
+ * @see StageTwoBuilder
+ * @since Stage1
  */
 class StageOneBuilder : public GameBuilder {
 protected:
@@ -78,7 +80,7 @@ public:
 };
 
 /**
- * @brief The GameDirector class
+ * @brief The GameDirector class directs a GameBuilder.
  *
  * @author "James Butcher"
  * @author nzho8446
