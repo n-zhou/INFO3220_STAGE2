@@ -117,7 +117,7 @@ protected:
 
     /**
      * @brief resolveCollision - resolve both ball's velocity whether these balls collide. If either
-     * ball breaks due to a collision, they will be removed from the game completely.
+     * ball breaks due to a collision, they will be removed from the game completely(hopefully).
      * @param ballA - first ball
      * @param ballB - second ball
      */

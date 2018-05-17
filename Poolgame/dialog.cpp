@@ -3,12 +3,9 @@
 #include <QPainter>
 #include <QTimer>
 #include <iostream>
+#include <QMouseEvent>
 #include <utility>
 #include "utils.h"
-
-//nzho8446 added headers
-#include <QMouseEvent>
-#include <cmath>
 
 Dialog::Dialog(std::unique_ptr<AbstractPlayableGame> game, QWidget* parent) :
     QDialog(parent),

@@ -5,10 +5,10 @@
 #include <stdexcept>
 #include <cmath>
 
-#include <iostream>
-
 Game::~Game() {
-
+    /** destructor body deleted since this class no longer
+     * uses raw pointers to hold memory
+     */
 }
 
 void Game::render(QPainter &painter) const {

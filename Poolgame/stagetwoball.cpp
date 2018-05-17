@@ -4,6 +4,7 @@ void StageTwoBall::translate(QVector2D vec) {
     m_pos += vec;
 
     for (auto b : m_balls) {
+        //we update the position of our inner balls as well
         b->translate(vec);
     }
 
@@ -15,8 +16,8 @@ void StageTwoBall::render(QPainter &painter) {
     // circle centered
     painter.drawEllipse(m_pos.toPointF(), m_radius, m_radius);
 
-    //draw the inner balls on top only if the user toggles it
     for (auto b : m_balls) {
+        //we draw the inner balls
         b->render(painter);
     }
 }
@@ -38,6 +39,7 @@ double StageTwoBall::getStrength() const {
 double StageTwoBall::getMass() const {
     double mass = m_mass;
     for (auto b : m_balls) {
+        //the effective mass of the ball includes the mass of the children balls
         mass += b->getMass();
     }
     return mass;

@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     Dialog w(std::move(game), nullptr);
     if (stage2)
-        w.setFixedSize(w.size());
+        w.setFixedSize(w.size()); //this is to stop Cameron from checking if the pockets were drawn outside of the table :O
     w.show();
     return a.exec();
 }

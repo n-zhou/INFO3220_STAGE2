@@ -33,10 +33,13 @@ protected:
 
 public:
     virtual ~Table() {}
+
+    //default values added since stage 2
     Table(int width, int height, QColor colour, double friction, int xpos = 0, int ypos = 0) :
         m_width(width), m_height(height), m_xpos(xpos), m_ypos(ypos),
         m_pockets(), m_brush(colour), m_friction(friction) {}
 
+    //constructor available since stage 2
     Table(int width, int height, QColor colour, double friction,
           std::vector<std::unique_ptr<Pocket>> &pockets, int xpos = 0, int ypos = 0) :
         m_width(width), m_height(height), m_xpos(xpos), m_ypos(ypos),
@@ -49,22 +52,16 @@ public:
     virtual void render(QPainter& painter) = 0;
 
     /**
-     * @brief addPocket
-     * @param pocket
-     * @since Stage 2
+     * @brief addPocket - adds a pocket to this table
+     * @param pocket - the pocket to add
      */
     void addPocket(std::unique_ptr<Pocket> pocket) { m_pockets.push_back(std::move(pocket)); }
+
     int getWidth() const { return m_width; }
     int getHeight() const { return m_height; }
     int getX() const { return m_xpos; }
     int getY() const { return m_ypos; }
     double getFriction() const { return m_friction; }
-
-    /**
-     * @brief getPockets
-     * @return
-     * @since Stage 2
-     */
     const std::vector<std::unique_ptr<Pocket>> &getPockets() const { return m_pockets; }
 };
 

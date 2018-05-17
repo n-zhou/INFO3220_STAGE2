@@ -6,24 +6,16 @@ void draw(QPainter &painter, Ball &ball);
 StageTwoPlayableGame::StageTwoPlayableGame(std::unique_ptr<Table> table, std::vector<std::shared_ptr<Ball>> &balls)
     : AbstractPlayableGame(), m_table(std::move(table)), m_balls(balls), m_clicked(false), m_toggle(false)
 {
-    //set the white ball
     for (auto b : m_balls) {
         if (b->getColour() == QColor("white")) {
+            //our cue ball is the first whiteball in the array
             m_whiteBall = b;
             break;
         }
     }
-
-    //remove out of bounds ball
-    for (auto i = m_balls.begin(); i != m_balls.end(); ++i) {
-        std::shared_ptr<Ball> b = *i;
-        if (isCollision(m_table.get(), b.get())) {
-            m_balls.erase(i--);
-        }
-    }
 }
 
-void StageTwoPlayableGame::rightClick(QMouseEvent *e) {
+void StageTwoPlayableGame::rightClick(QMouseEvent *) {
     //toggles the visibility of the inner balls on
     m_toggle = !m_toggle;
 }
@@ -91,11 +83,11 @@ void StageTwoPlayableGame::render(QPainter &painter) {
             //else we draw the parent ball only
             this->render(painter, b.get());
         }
-
     }
 
-    //draws the line while the left mouse button is clicked and aiming is on
+
     if (m_clicked && !m_whiteBall.expired()) {
+        //draw the line while the left mouse button is clicked and aiming is on
         //thickness of the line is set to illustrate power of shot
         painter.save();
         double distance = m_whiteBall.lock()->getPosition().distanceToPoint(m_mousePos);

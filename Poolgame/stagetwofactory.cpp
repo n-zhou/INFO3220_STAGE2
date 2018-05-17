@@ -195,8 +195,8 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) 
     pockets.erase(
                 std::remove_if(pockets.begin(), pockets.end(),
                                [&width, &height](const std::unique_ptr<Pocket> &p)
-                { return ((p->getPos().x() + p->getRadius() < 0) || (p->getPos().x() - p->getRadius() > width)
-                                || (p->getPos().y() + p->getRadius() < 0) || (p->getPos().y() - p->getRadius() > height)); }),
+                { return (p->getPos().x() + p->getRadius() < 0) || (p->getPos().x() - p->getRadius() > width)
+                                || (p->getPos().y() + p->getRadius() < 0) || (p->getPos().y() - p->getRadius() > height); }),
                 pockets.end());
     return std::unique_ptr<Table>(new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets));
 }
