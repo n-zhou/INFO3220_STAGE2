@@ -64,7 +64,7 @@ public:
     /**
      * @brief mouseDrag - this method is called whenever the user moves
      * the mouse around. This method assumes that the QMouseEvent from the
-     * dialog class has tracking turned on.
+     * dialog class has mouse tracking turned on.
      *
      * @param e - The QMouseEvent associated with moving the mouse.
      */
@@ -83,10 +83,8 @@ public:
     virtual void render(QPainter &painter) override;
 
     /**
-     * @brief animate
-     * @param dt - the number of seconds between each call of this
-     * method
-     * XXX
+     * @brief animate Updates the positions of all objects within, based on how much time has changed
+     * @param dt - the number of seconds between each call of this method
      */
     virtual void animate(double dt) override;
 
@@ -162,15 +160,4 @@ private:
      * children balls on top of their parents.
      */
     bool m_toggle;
-
-    /**
-     * @brief isCollision - is a method used to determine whether
-     * a ball collides with the side of a table. This method can be
-     * used as a predicate for the method resolveCollision(Table*, Ball*)
-     * @param table - the table we want to that the ball collides with
-     * @param b - the ball we want to check
-     * @return <tt>true</tt> if and only if the ball collides
-     * with the sides of the table.
-     */
-    bool isCollision(const Table *table, const Ball *b) const;
 };

@@ -4,11 +4,12 @@
 #include "table.h"
 
 /**
- * @brief The StageTwoTable class
+ * @brief The StageTwoTable class is can do everthing StageOneTable can and
+ * draw pockets as well. Isn't that cool?
  *
  * @author nzho8446
  * @see Table
- *
+ * @see StageOneTable
  * @since Stage 2
  */
 
@@ -19,7 +20,4 @@ public:
         : Table(width, height, colour, friction, pockets){}
 
     void render(QPainter& painter) override;
-protected:
-    //pockets???
-
 };

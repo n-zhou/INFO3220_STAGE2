@@ -43,38 +43,39 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData) {
         std::cerr << "ball radius missing" << std::endl;
     }
 
-    //check the ball position
+
     if (ballData.contains("position")) {
+
         QJsonObject ballPosition = ballData["position"].toObject();
 
-        //check the ball's x position
         if (ballPosition.contains("x") && ballPosition["x"].isDouble()) {
             xpos = ballPosition["x"].toDouble();
         } else {
             std::cerr << "missing ball x position or invalid x value" << std::endl;
         }
 
-        //check the ball's y position
         if (ballPosition.contains("y") && ballPosition["y"].isDouble()) {
             ypos = ballPosition["y"].toDouble();
         } else {
             std::cerr << "missing ball y position or invalid y value" << std::endl;
         }
     } else {
-        std::cerr << "missing both ball position" << std::endl;
+        /* although a ball missing either position will be outside the boundary of the table and
+         * should be removed since it will be in (x, 0) or (0, y), we cannot determine whether it
+         * a position that may look valid is outside the boundary of the table. Therefore we must
+         * leave it to the getResult() method to remove it. */
+        std::cerr << "Missing both ball positions" << std::endl;
     }
 
     if (ballData.contains("velocity")) {
         QJsonObject ballVelocity = ballData["velocity"].toObject();
 
-        //check the ball's x position
         if (ballVelocity.contains("x") && ballVelocity["x"].isDouble()) {
             xvel = ballVelocity["x"].toDouble();
         } else {
             std::cerr << "missing ball x velocity or invalid value" << std::endl;
         }
 
-        //check the ball's y position
         if (ballVelocity.contains("y") && ballVelocity["y"].isDouble()) {
             yvel = ballVelocity["y"].toDouble();
         } else {
@@ -109,9 +110,10 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) 
     double friction = Default::Table::friction;
     std::vector<std::unique_ptr<Pocket>> pockets;
 
-    //if the table is missing from the config file we operate like stage one
+
     if (tableData.empty()) {
-        std::cerr << "table missing from config file...initialising to default";
+        //if the table is missing from the config file we operate like stage one
+        std::cerr << "table missing from config file...initialising to default" << std::endl;
         return std::unique_ptr<Table>(new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets));
     }
 
@@ -195,8 +197,8 @@ std::unique_ptr<Table> StageTwoFactory::makeTable(const QJsonObject &tableData) 
     pockets.erase(
                 std::remove_if(pockets.begin(), pockets.end(),
                                [&width, &height](const std::unique_ptr<Pocket> &p)
-                { return (p->getPos().x() + p->getRadius() < 0) || (p->getPos().x() - p->getRadius() > width)
-                                || (p->getPos().y() + p->getRadius() < 0) || (p->getPos().y() - p->getRadius() > height); }),
+                                { return (p->getPos().x() + p->getRadius() < 0) || (p->getPos().x() - p->getRadius() > width)
+                                    || (p->getPos().y() + p->getRadius() < 0) || (p->getPos().y() - p->getRadius() > height); }),
                 pockets.end());
     return std::unique_ptr<Table>(new StageTwoTable(width, height, QColor(colour.c_str()), friction, pockets));
 }
@@ -256,12 +258,8 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
     //make the position of inner ball relative to the parent
     pos += parentBall->getPosition();
     std::unique_ptr<StageTwoBall> ret = std::unique_ptr<StageTwoBall>(
-                new StageTwoBall(QColor(colour.c_str()),
-                                 pos,
-                                 vel,
-                                 mass,
-                                 radius,
-                                 strength));
+                new StageTwoBall(QColor(colour.c_str()), pos, vel,
+                                 mass, radius, strength));
     if (parentBall->getPosition().distanceToPoint(ret->getPosition()) + ret->getRadius() > parentBall->getRadius()) {
         //if the new ball we are creating is outside the parent ball we stop don't make the inner balls of this ball
         return ret;

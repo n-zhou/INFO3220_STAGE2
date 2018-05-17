@@ -12,13 +12,13 @@
  * billards or as most people call it, pool.
  *
  * <p>
- * Since the version stage 2,
+ * Since stage 2, the Table contains pockets as well.
  * </p>
  *
  * @author "James Butcher"
  * @author nzho8446
- * @see StageOneBall
- * @see StageTwoBall
+ * @see StageOneTable
+ * @see StageTwoTable
  * @since Stage 1
  */
 class Table {
@@ -66,7 +66,7 @@ public:
 };
 
 /**
- * @brief The StageOneTable class
+ * @brief The StageOneTable class provides a simple but concrete implementation of Table.
  * @author "James Butcher"
  * @since Stage 1
  */

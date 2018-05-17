@@ -17,6 +17,10 @@ public:
 
     virtual ~StageTwoPocket() {}
 
+    /**
+     * @brief render - draw the pockeet onto the screen using the specified painter
+     * @param painter - the painter to use
+     */
     virtual void render(QPainter &painter) override;
 };
 
