@@ -60,8 +60,7 @@ private:
      * @brief makeBall - construct a ball based on the provided json and parent ball
      * @param parentBall - the ball which will contain the ball we are making
      * @param ballData - json that conforms to the spec
-     * @return our newly created child ball if it fully contained by the parentBall,
-     * otherwise it will return a nullptr
+     * @return our newly created child ball which may possibly be outside the the parentball
      */
     std::shared_ptr<Ball> makeBall(const Ball *parentBall,const QJsonObject &ballData);
 };

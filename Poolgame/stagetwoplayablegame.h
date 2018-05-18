@@ -111,7 +111,7 @@ protected:
      * @param table - the table to be bounds checked
      * @param ball - the ball to move
      */
-    virtual void resolveCollision(Table *table, Ball *ball);
+    virtual void resolveCollision(const Table *table, Ball *ball);
 
     /**
      * @brief resolveCollision - resolve both ball's velocity whether these balls collide. If either
@@ -126,7 +126,7 @@ protected:
      * @param painter - the QPainter used to draw the ball
      * @param ball - a pointer to the ball to be drawn
      */
-    virtual void render(QPainter &painter, Ball *ball);
+    virtual void render(QPainter &painter, const Ball *ball);
 
     /**
      * @brief hitTheWhiteBall - applies the change in velocity

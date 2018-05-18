@@ -13,7 +13,9 @@
 
 class StageTwoPocket : public Pocket {
 public:
-    StageTwoPocket(QVector2D pos, double radius);
+    StageTwoPocket(QVector2D pos, double radius) :
+        Pocket(pos, radius) {}
+
 
     virtual ~StageTwoPocket() {}
 

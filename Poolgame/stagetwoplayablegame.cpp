@@ -22,16 +22,19 @@ void StageTwoPlayableGame::rightClick(QMouseEvent *) {
 
 void StageTwoPlayableGame::leftClick(QMouseEvent *e) {
     if (m_whiteBall.expired()) {
+        //we return since there is no white ball
         return;
     }
     QVector2D velocity = m_whiteBall.lock()->getVelocity();
-    //we allow an epsilon on 2 when deciding whether the white ball is stationary
-    if (std::fabs(velocity.x()) > 2 || std::fabs(velocity.y()) > 2) {
+    //we allow an epsilon on 0.1 when deciding whether the white ball is stationary
+    if (std::fabs(velocity.x()) > 0.1 && std::fabs(velocity.y()) > 0.1) {
+        //the ball is not stationary so we do let the user hit it
         std::cout << "You can only hit the cue when it's not moving!" << std::endl;
         return;
     }
     m_mousePos = QVector2D(e->localPos());
     if (m_whiteBall.lock()->getPosition().distanceToPoint(m_mousePos) <= m_whiteBall.lock()->getRadius()) {
+        //the user must click on the cue ball for the click to "register"
         m_clicked = true;
     }
 }
@@ -39,6 +42,7 @@ void StageTwoPlayableGame::leftClick(QMouseEvent *e) {
 void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e) {
     if (m_clicked && !m_whiteBall.expired()) {
         m_mousePos = QVector2D(e->localPos());
+        //apply the change in velocity to the white ball after the user lets go of the mouse
         hitTheWhiteBall();
         m_clicked = false;
     }
@@ -46,6 +50,7 @@ void StageTwoPlayableGame::leftClickRelease(QMouseEvent *e) {
 
 void StageTwoPlayableGame::mouseDrag(QMouseEvent *e) {
     if (m_clicked && !m_whiteBall.expired()) {
+        //updates the position of the mouse for the visual indicator
         m_mousePos = QVector2D(e->localPos());
     }
 }
@@ -172,7 +177,7 @@ void StageTwoPlayableGame::animate(double dt) {
 
 }
 
-void StageTwoPlayableGame::resolveCollision(Table *table, Ball *ball) {
+void StageTwoPlayableGame::resolveCollision(const Table *table, Ball *ball) {
     QVector2D bPos = ball->getPosition();
 
     // resulting multiplicity of direction. If a component is set to -1, it
@@ -242,6 +247,7 @@ void StageTwoPlayableGame::resolveCollision(std::shared_ptr<Ball> ballA, std::sh
             QVector2D componentBallVelocity = preCollisionVelocity +
                     sqrt(energyPerBall/b->getMass())*(b->getPosition()-pointOfCollision).normalized();
             b->changeVelocity(componentBallVelocity);
+            //add the component ball to our vector of parent balls
             m_balls.push_back(b);
         };
         //erase ballA from our vector of balls since it broke
@@ -266,6 +272,7 @@ void StageTwoPlayableGame::resolveCollision(std::shared_ptr<Ball> ballA, std::sh
             QVector2D componentBallVelocity = preCollisionVelocity +
                     sqrt(energyPerBall/b->getMass())*(b->getPosition()-pointOfCollision).normalized();
             b->changeVelocity(componentBallVelocity);
+            //add the component ball to our vector of parent balls
             m_balls.push_back(b);
         }
         //erase ballB from our vector of balls since it broke
@@ -313,7 +320,7 @@ void StageTwoPlayableGame::hitTheWhiteBall() {
     m_whiteBall.lock()->changeVelocity(mR * (vB - root) * collisionVector);
 }
 
-void StageTwoPlayableGame::render(QPainter &painter, Ball *ball) {
+void StageTwoPlayableGame::render(QPainter &painter, const Ball *ball) {
     painter.save();
     painter.setBrush(ball->getColour());
     painter.drawEllipse(ball->getPosition().toPointF(),

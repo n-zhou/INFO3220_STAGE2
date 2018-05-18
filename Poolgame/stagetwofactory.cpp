@@ -23,24 +23,23 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const QJsonObject &ballData) {
     }
 
     //check for ball mass
-    if (ballData.contains("mass")) {
+    if (ballData.contains("mass") && ballData["mass"].isDouble() && ballData["mass"].toDouble() >= 0) {
         mass = ballData["mass"].toDouble();
     } else {
-        std::cerr << "missing ball mass" << std::endl;
+        std::cerr << "missing or invalid ball mass" << std::endl;
     }
 
     //check for ball strength
-    if (ballData.contains("strength")) {
+    if (ballData.contains("strength") && ballData["strength"].isDouble()) {
         strength = ballData["strength"].toDouble();
     } else {
-        std::cerr << "missing ball strength" << std::endl;
+        std::cerr << "missing or invalid ball strength" << std::endl;
     }
 
-    //check for ball radius
-    if (ballData.contains("radius")) {
+    if (ballData.contains("radius") && ballData["radius"].isDouble() && ballData["radius"].toDouble() > 0) {
         radius = ballData["radius"].toDouble();
     } else {
-        std::cerr << "ball radius missing" << std::endl;
+        std::cerr << "ball radius missing or invalid" << std::endl;
     }
 
 
@@ -218,23 +217,22 @@ std::shared_ptr<Ball> StageTwoFactory::makeBall(const Ball *parentBall, const QJ
         std::cerr << "missing ball colour" << std::endl;
     }
 
-    if (ballData.contains("mass")) {
-
+    if (ballData.contains("mass") && ballData["mass"].isDouble() && ballData["mass"].toDouble() >= 0) {
         mass = ballData["mass"].toDouble();
     } else {
-        std::cerr << "missing ball mass" << std::endl;
+        std::cerr << "missing or invalid ball mass" << std::endl;
     }
 
-    if (ballData.contains("strength")) {
+    if (ballData.contains("strength") && ballData["strength"].isDouble()) {
         strength = ballData["strength"].toDouble();
     } else {
-        std::cerr << "missing ball strength" << std::endl;
+        std::cerr << "missing or invalid ball strength" << std::endl;
     }
 
-    if (ballData.contains("radius")) {
+    if (ballData.contains("radius") && ballData["radius"].isDouble() && ballData["radius"].toDouble() >= 0) {
         radius = ballData["radius"].toDouble();
     } else {
-        std::cerr << "ball radius missing" << std::endl;
+        std::cerr << "ball radius missing or invalid" << std::endl;
     }
 
     if (ballData.contains("position")) {

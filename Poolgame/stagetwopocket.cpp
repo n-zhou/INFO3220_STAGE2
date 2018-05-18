@@ -1,11 +1,5 @@
 #include "stagetwopocket.h"
 
-StageTwoPocket::StageTwoPocket(QVector2D pos, double radius):
-    Pocket(pos, radius)
-{
-
-}
-
 void StageTwoPocket::render(QPainter& painter) {
     painter.save();
     // set color to black
